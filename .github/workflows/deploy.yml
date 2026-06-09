@@ -1,0 +1,61 @@
+name: Hugo Build & FTP Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout（サブモジュール含む）
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: FTP_SERVER_DIR 安全ガード
+        # lessons-learned: FTP_SERVER_DIR が未設定のまま実行するとサーバールートに誤爆する
+        run: |
+          if [ -z "${{ secrets.FTP_SERVER_DIR }}" ]; then
+            echo "ERROR: FTP_SERVER_DIR secret が設定されていません。"
+            echo "GitHub リポジトリ Settings → Secrets and variables → Actions で以下を設定してください:"
+            echo "  FTP_SERVER_DIR = web/  （LOLIPOPの場合、FTPルートは /home/users/.../web/ なので web/ と設定）"
+            exit 1
+          fi
+
+      - name: Hugo セットアップ
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.147.0'
+          extended: true
+
+      - name: Hugo ビルド
+        run: hugo --minify
+
+      - name: FTP デプロイ（LOLIPOP）
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          local-dir: ./public/
+          # dangerous-clean-slate は使用しない（WordPress /blog/ を保護）
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            blog/**
+            wp-content/**
+            wp-includes/**
+            wp-admin/**
+            wp-*.php
+            xmlrpc.php

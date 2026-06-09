@@ -1,0 +1,75 @@
+baseURL = "https://www.money-mgt.net/"
+languageCode = "ja"
+defaultContentLanguage = "ja"
+title = "マネーマネジメント | FP・独立FP向けAIツール"
+theme = "PaperMod"
+enableRobotsTXT = true
+buildDrafts = false
+buildFuture = false
+buildExpired = false
+
+[params]
+  env = "production"
+  description = "独立FP向けAI業務支援SaaS「FPマイポータル」を提供。AI提案書生成・議事録自動化・顧客セルフ入力フォームで業務時間を最大40%削減。"
+  author = "マネーマネジメント"
+  defaultTheme = "auto"
+  ShowReadingTime = false
+  ShowShareButtons = false
+  ShowPostNavLinks = false
+  ShowBreadCrumbs = false
+  ShowCodeCopyButtons = false
+  ShowWordCount = false
+  ShowRssButtonInSectionTermList = false
+  UseHugoToc = false
+  disableScrollToTop = false
+  disableThemeToggle = true
+
+  [params.homeInfoParams]
+    Title = "FPの仕事を、もっと自分らしく。"
+    Content = """
+AI提案書生成・議事録自動化・顧客セルフ入力。
+独立FPが「相談に集中する時間」を取り戻すSaaSツール。
+"""
+
+  [[params.socialIcons]]
+    name = "X"
+    url = "https://twitter.com/moneymt_fp"
+
+[menu]
+  [[menu.main]]
+    identifier = "fp-myportal"
+    name = "FPマイポータル"
+    url = "/fp-myportal/"
+    weight = 10
+  [[menu.main]]
+    identifier = "business"
+    name = "法人・FP向けサービス"
+    url = "/business/"
+    weight = 20
+  [[menu.main]]
+    identifier = "junior-emp"
+    name = "就職・副業支援"
+    url = "/junior-emp/"
+    weight = 30
+  [[menu.main]]
+    identifier = "blog"
+    name = "ブログ"
+    url = "https://www.money-mgt.net/blog/"
+    weight = 40
+  [[menu.main]]
+    identifier = "contact"
+    name = "お問い合わせ"
+    url = "/contact/"
+    weight = 50
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[minify]
+  disableXML = true
+  minifyOutput = true
