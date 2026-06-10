@@ -1,7 +1,9 @@
-name: ステージングデプロイ（hugo-dev環境）
+name: ステージングデプロイ（dev-hugo環境）
 
 on:
-  # push: # disabled - リリース未承認のため代表承認後に有効化すること
+  push:
+    branches:
+      - develop
   workflow_dispatch:
 
 permissions:
@@ -9,7 +11,7 @@ permissions:
 
 jobs:
   deploy:
-    name: Hugo ビルド → FTP デプロイ（hugo-dev）
+    name: Hugo ビルド → FTP デプロイ（dev-hugo）
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -25,7 +27,7 @@ jobs:
           if [ -z "${{ secrets.FTP_SERVER_DIR_DEV }}" ]; then
             echo "ERROR: FTP_SERVER_DIR_DEV が未設定です。デプロイを中止します。"
             echo "GitHub リポジトリ Settings → Secrets で以下を設定してください:"
-            echo "  FTP_SERVER_DIR_DEV = web/hugo-dev/"
+            echo "  FTP_SERVER_DIR_DEV = dev-hugo/"
             exit 1
           fi
           echo "OK: FTP_SERVER_DIR_DEV が設定されています"
@@ -57,9 +59,9 @@ jobs:
           extended: true
 
       - name: Hugo ビルド（baseURL をステージング用に上書き）
-        run: hugo --minify --baseURL "https://www.money-mgt.net/hugo-dev/"
+        run: hugo --minify --baseURL "https://dev-hugo.money-mgt.net/"
 
-      - name: FTP デプロイ → LOLIPOP hugo-dev環境
+      - name: FTP デプロイ → LOLIPOP dev-hugo環境
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -81,7 +83,7 @@ jobs:
         if: success()
         run: |
           echo "ステージング環境へのデプロイが完了しました"
-          echo "確認URL: https://www.money-mgt.net/hugo-dev/"
+          echo "確認URL: https://dev-hugo.money-mgt.net/"
           echo "デプロイ先: ${{ secrets.FTP_SERVER_DIR_DEV }}"
           echo "コミット: ${{ github.sha }}"
 
