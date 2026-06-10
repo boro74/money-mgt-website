@@ -1,0 +1,91 @@
+name: 本番デプロイ（money-mgt.net）
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Hugo ビルド → FTP デプロイ（本番）
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: リポジトリをチェックアウト（サブモジュール含む）
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: ガード① Secret未設定チェック
+        run: |
+          if [ -z "${{ secrets.FTP_SERVER_DIR }}" ]; then
+            echo "ERROR: FTP_SERVER_DIR が未設定です。デプロイを中止します。"
+            echo "GitHub リポジトリ Settings → Secrets で以下を設定してください:"
+            echo "  FTP_SERVER_DIR = web/"
+            exit 1
+          fi
+          echo "OK: FTP_SERVER_DIR が設定されています"
+
+      - name: ガード② デプロイ前サマリー表示
+        run: |
+          echo "========================================"
+          echo "  [本番デプロイ] money-mgt.net"
+          echo "  デプロイ先 : ${{ secrets.FTP_SERVER_DIR }}"
+          echo "  ブランチ   : ${{ github.ref_name }}"
+          echo "  コミット   : ${{ github.sha }}"
+          echo "  実行者     : ${{ github.actor }}"
+          echo "========================================"
+
+      - name: Hugo セットアップ
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.147.0'
+          extended: true
+
+      - name: Hugo ビルド（本番 baseURL）
+        run: hugo --minify
+
+      - name: FTP デプロイ → LOLIPOP 本番環境
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          protocol: ftp
+          local-dir: ./public/
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.DS_Store
+            **/Thumbs.db
+            blog/**
+            wp-content/**
+            wp-includes/**
+            wp-admin/**
+            wp-*.php
+            xmlrpc.php
+          dangerous-clean-slate: false
+
+      - name: デプロイ完了通知
+        if: success()
+        run: |
+          echo "本番環境へのデプロイが完了しました"
+          echo "URL: https://www.money-mgt.net/"
+          echo "デプロイ先: ${{ secrets.FTP_SERVER_DIR }}"
+          echo "コミット: ${{ github.sha }}"
+
+      - name: デプロイ失敗通知
+        if: failure()
+        run: |
+          echo "本番環境へのデプロイに失敗しました"
+          echo "コミット: ${{ github.sha }}"
+          echo "ブランチ: ${{ github.ref_name }}"
