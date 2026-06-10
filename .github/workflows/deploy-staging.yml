@@ -1,9 +1,7 @@
 name: ステージングデプロイ（hugo-dev環境）
 
 on:
-  push:
-    branches:
-      - develop
+  # push: # disabled - リリース未承認のため代表承認後に有効化すること
   workflow_dispatch:
 
 permissions:
