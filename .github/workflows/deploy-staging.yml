@@ -1,0 +1,95 @@
+name: ステージングデプロイ（hugo-dev環境）
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Hugo ビルド → FTP デプロイ（hugo-dev）
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: リポジトリをチェックアウト（サブモジュール含む）
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: ガード① Secret未設定チェック
+        run: |
+          if [ -z "${{ secrets.FTP_SERVER_DIR_DEV }}" ]; then
+            echo "ERROR: FTP_SERVER_DIR_DEV が未設定です。デプロイを中止します。"
+            echo "GitHub リポジトリ Settings → Secrets で以下を設定してください:"
+            echo "  FTP_SERVER_DIR_DEV = web/hugo-dev/"
+            exit 1
+          fi
+          echo "OK: FTP_SERVER_DIR_DEV が設定されています"
+
+      - name: ガード② デプロイ先パス検証（devを含むこと）
+        run: |
+          TARGET="${{ secrets.FTP_SERVER_DIR_DEV }}"
+          echo "デプロイ先パス: ${TARGET}"
+          if [[ "${TARGET}" != *"dev"* ]]; then
+            echo "ERROR: FTP_SERVER_DIR_DEV に 'dev' が含まれていません（本番パスへの誤爆防止）"
+            echo "設定値: ${TARGET}"
+            exit 1
+          fi
+          echo "OK: パスに 'dev' を確認しました"
+
+      - name: ガード③ デプロイ前サマリー表示
+        run: |
+          echo "========================================"
+          echo "  デプロイ先 : ${{ secrets.FTP_SERVER_DIR_DEV }}"
+          echo "  ブランチ   : ${{ github.ref_name }}"
+          echo "  コミット   : ${{ github.sha }}"
+          echo "  実行者     : ${{ github.actor }}"
+          echo "========================================"
+
+      - name: Hugo セットアップ
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.147.0'
+          extended: true
+
+      - name: Hugo ビルド（baseURL をステージング用に上書き）
+        run: hugo --minify --baseURL "https://www.money-mgt.net/hugo-dev/"
+
+      - name: FTP デプロイ → LOLIPOP hugo-dev環境
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          protocol: ftp
+          local-dir: ./public/
+          server-dir: ${{ secrets.FTP_SERVER_DIR_DEV }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.DS_Store
+            **/Thumbs.db
+          dangerous-clean-slate: false
+
+      - name: デプロイ完了通知
+        if: success()
+        run: |
+          echo "ステージング環境へのデプロイが完了しました"
+          echo "確認URL: https://www.money-mgt.net/hugo-dev/"
+          echo "デプロイ先: ${{ secrets.FTP_SERVER_DIR_DEV }}"
+          echo "コミット: ${{ github.sha }}"
+
+      - name: デプロイ失敗通知
+        if: failure()
+        run: |
+          echo "ステージング環境へのデプロイに失敗しました"
+          echo "コミット: ${{ github.sha }}"
+          echo "ブランチ: ${{ github.ref_name }}"
