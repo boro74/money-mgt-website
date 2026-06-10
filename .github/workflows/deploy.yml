@@ -1,9 +1,7 @@
 name: Hugo Build & FTP Deploy
 
 on:
-  push:
-    branches:
-      - main
+  # push: # disabled - リリース未承認のため代表承認後に有効化すること
   workflow_dispatch:
 
 permissions:
