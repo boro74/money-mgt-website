@@ -1,0 +1,118 @@
+/* ===========================================
+   マネーマネジメント カスタムスタイル
+   =========================================== */
+
+/* ---- CTAボタン ---- */
+.btn {
+  display: inline-block;
+  padding: 0.75em 1.6em;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none !important;
+  transition: opacity 0.2s, transform 0.1s;
+  cursor: pointer;
+  border: none;
+}
+.btn:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+.btn-primary {
+  background: #2563eb;
+  color: #fff !important;
+}
+.btn-secondary {
+  background: transparent;
+  color: #2563eb !important;
+  border: 2px solid #2563eb;
+}
+.btn-large {
+  font-size: 1.15rem;
+  padding: 0.9em 2em;
+}
+.cta-buttons {
+  margin: 1.5em 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75em;
+  align-items: center;
+}
+
+/* ---- CTAセクション ---- */
+.cta-section {
+  background: #f0f5ff;
+  border-radius: 12px;
+  padding: 2em 2em 2.5em;
+  margin: 2.5em 0;
+  text-align: center;
+  border: 1px solid #c7d9ff;
+}
+.cta-section h2 {
+  margin-top: 0;
+  font-size: 1.4rem;
+  color: #1e3a8a;
+}
+.cta-section p {
+  color: #475569;
+  margin-bottom: 1.5em;
+}
+
+/* ---- ヒーローセクション強化 ---- */
+.home-info-wrapper {
+  padding: 3em 0 2em;
+}
+.home-info-wrapper .entry-header h1,
+.home-info-wrapper h1 {
+  font-size: 2rem;
+  line-height: 1.4;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+/* ---- テーブル ---- */
+.post-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+  font-size: 0.95rem;
+}
+.post-content table th {
+  background: #f1f5f9;
+  font-weight: 700;
+  padding: 0.6em 1em;
+  border: 1px solid #e2e8f0;
+  text-align: left;
+}
+.post-content table td {
+  padding: 0.6em 1em;
+  border: 1px solid #e2e8f0;
+}
+.post-content table tr:nth-child(even) td {
+  background: #f8fafc;
+}
+
+/* ---- セクション区切り強調 ---- */
+.post-content h2 {
+  margin-top: 2.5em;
+  padding-bottom: 0.4em;
+  border-bottom: 2px solid #e2e8f0;
+}
+.post-content h3 {
+  margin-top: 1.8em;
+  color: #1e3a8a;
+}
+
+/* ---- レスポンシブ ---- */
+@media (max-width: 640px) {
+  .cta-buttons {
+    flex-direction: column;
+  }
+  .btn {
+    text-align: center;
+    width: 100%;
+  }
+  .home-info-wrapper h1 {
+    font-size: 1.5rem;
+  }
+}
