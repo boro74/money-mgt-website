@@ -223,3 +223,51 @@
   .post-content table th,
   .post-content table td { padding: 0.5em 0.75em; }
 }
+
+/* ---------- サービスカード（グリッド） ---------- */
+.service-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0 2rem;
+}
+.service-card {
+  background: #fff;
+  border: 1px solid var(--mm-border);
+  border-radius: var(--mm-radius);
+  padding: 1.5rem 1.5rem 1.75rem;
+  box-shadow: var(--mm-shadow);
+  transition: transform 0.18s, box-shadow 0.18s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.service-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(37,99,235,0.13);
+}
+.service-card-icon {
+  font-size: 2rem;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+.service-card h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+.service-card h3 a { color: var(--mm-text) !important; }
+.service-card h3 a:hover { color: var(--mm-primary) !important; }
+.service-card p {
+  color: var(--mm-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  flex: 1;
+  margin: 0.25rem 0 0.75rem;
+}
+.service-card .btn { align-self: flex-start; font-size: 0.875rem; padding: 0.5em 1.2em; }
+
+@media (max-width: 640px) {
+  .service-cards { grid-template-columns: 1fr; }
+  .service-card .btn { width: 100%; text-align: center; }
+}
