@@ -267,6 +267,33 @@
 }
 .service-card .btn { align-self: flex-start; font-size: 0.875rem; padding: 0.5em 1.2em; }
 
+/* ---------- 代表プロフィールサマリー ---------- */
+.about-summary {
+  background: var(--mm-bg-soft);
+  border: 1px solid var(--mm-border);
+  border-left: 4px solid var(--mm-primary);
+  border-radius: var(--mm-radius);
+  padding: 1.75rem 1.75rem 1.5rem;
+  margin: 1.5rem 0 2rem;
+  box-shadow: var(--mm-shadow);
+}
+.about-summary p {
+  color: var(--mm-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.75;
+  margin-bottom: 0.75rem;
+}
+.about-summary strong {
+  color: var(--mm-text);
+}
+.about-summary .btn {
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .about-summary { padding: 1.25rem 1.1rem; }
+}
+
 @media (max-width: 640px) {
   .service-cards { grid-template-columns: 1fr; }
   .service-card .btn { width: 100%; text-align: center; }
