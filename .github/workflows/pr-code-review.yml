@@ -138,8 +138,10 @@ jobs:
 
           cd /tmp
           rm -rf mgt-qa-tmp
-          git clone "https://x-access-token:${GH_TOKEN}@github.com/boro74/money-mgt.git" mgt-qa-tmp
+          AUTH_HEADER="AUTHORIZATION: basic $(printf 'x-access-token:%s' "${GH_TOKEN}" | base64 -w 0)"
+          git -c "http.https://github.com/.extraheader=${AUTH_HEADER}" clone https://github.com/boro74/money-mgt.git mgt-qa-tmp
           cd mgt-qa-tmp
+          git config "http.https://github.com/.extraheader" "${AUTH_HEADER}"
 
           TASK_ID="$TASK_ID" \
           REPO="$REPO" \
@@ -216,7 +218,6 @@ jobs:
 
           git config user.name "qa-review-bot [bot]"
           git config user.email "qa-review@money-mgt.net"
-          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/boro74/money-mgt.git"
           git add director/task-queue/queue.json
           git diff --staged --quiet && echo "変更なし" && exit 0
           git commit -m "task: QAレビュー修正タスク追加 ${REPO} PR#${PR_NUMBER} [${MAX_SEV}]"
