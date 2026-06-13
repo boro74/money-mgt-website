@@ -45,6 +45,12 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
           REPO: ${{ github.repository }}
         run: |
+          # claude CLIの存在確認（未インストール時に早期失敗させる）
+          if ! command -v claude > /dev/null 2>&1; then
+            echo "ERROR: claude CLIがインストールされていません。self-hosted runnerにclaude CLIを導入してください。"
+            exit 1
+          fi
+
           # PR_TITLE はユーザー制御可能な値のためプロンプトに直接埋め込まず、サニタイズしてから使用する
           PR_TITLE_SAFE=$(printf '%s' "${PR_TITLE}" | python3 -c "import sys, re; t=sys.stdin.read().strip()[:100]; print(re.sub(r'[\x00-\x1f\x7f\`<>]', '', t))")
           PROMPT=$(cat <<PROMPT_EOF
@@ -138,10 +144,20 @@ jobs:
 
           cd /tmp
           rm -rf mgt-qa-tmp
-          AUTH_HEADER="AUTHORIZATION: basic $(printf 'x-access-token:%s' "${GH_TOKEN}" | base64 -w 0)"
-          git -c "http.https://github.com/.extraheader=${AUTH_HEADER}" clone https://github.com/boro74/money-mgt.git mgt-qa-tmp
+          # GH_TOKENをURLやextraheaderに直接埋め込まず、GIT_ASKPASSを使用してログ・プロセス一覧への漏洩を防ぐ
+          ASKPASS_SCRIPT=$(mktemp /tmp/askpass-XXXXXX.sh)
+          printf '#!/bin/sh\necho "%s"\n' "${GH_TOKEN}" > "$ASKPASS_SCRIPT"
+          chmod +x "$ASKPASS_SCRIPT"
+          GIT_ASKPASS="$ASKPASS_SCRIPT" GIT_USERNAME="x-access-token" git clone https://github.com/boro74/money-mgt.git mgt-qa-tmp
+          rm -f "$ASKPASS_SCRIPT"
           cd mgt-qa-tmp
-          git config "http.https://github.com/.extraheader" "${AUTH_HEADER}"
+          # push用のリモートURLも同様に認証情報をURLに埋め込まない設定
+          PUSH_ASKPASS=$(mktemp /tmp/askpass-XXXXXX.sh)
+          printf '#!/bin/sh\necho "%s"\n' "${GH_TOKEN}" > "$PUSH_ASKPASS"
+          chmod +x "$PUSH_ASKPASS"
+          git config core.askPass "$PUSH_ASKPASS"
+          GIT_USERNAME="x-access-token"
+          export GIT_USERNAME
 
           TASK_ID="$TASK_ID" \
           REPO="$REPO" \
@@ -219,13 +235,14 @@ jobs:
           git config user.name "qa-review-bot [bot]"
           git config user.email "qa-review@money-mgt.net"
           git add director/task-queue/queue.json
-          git diff --staged --quiet && echo "変更なし" && exit 0
+          git diff --staged --quiet && echo "変更なし" && rm -f "${PUSH_ASKPASS:-}" && exit 0
           git commit -m "task: QAレビュー修正タスク追加 ${REPO} PR#${PR_NUMBER} [${MAX_SEV}]"
           for i in 1 2 3; do
-            git pull --rebase --autostash origin main && git push && break
+            git pull --rebase --autostash origin main && GIT_ASKPASS="${PUSH_ASKPASS}" GIT_USERNAME="x-access-token" git push && break
             echo "push retry $i/3..."
             sleep $((i * 3))
           done
+          rm -f "${PUSH_ASKPASS:-}"
           echo "✅ queue.json にタスクを追加しました: ${TASK_ID}"
 
       - name: QAパス時に代表へ承認依頼（money-mgt Issue）
@@ -250,6 +267,8 @@ jobs:
             exit 0
           fi
 
+          # PR_TITLE のサニタイズ（シェルインジェクション対策：制御文字・<>・バッククォートを除去）
+          PR_TITLE_SAFE=$(printf '%s' "${PR_TITLE}" | python3 -c "import sys, re; t=sys.stdin.read().strip()[:100]; print(re.sub(r'[\x00-\x1f\x7f\`<>]', '', t))")
           PR_URL="https://github.com/${REPO}/pull/${PR_NUMBER}"
           MGT_REPO="boro74/money-mgt"
 
@@ -275,9 +294,11 @@ jobs:
           *QAレビューbot 自動追記 $(date '+%Y-%m-%d %H:%M %Z')*"
             echo "✅ money-mgt Issue #${EXISTING} にコメント追記しました"
           else
+            # PR_TITLEをシェル展開リスクを避けるため変数経由で渡す（シェルインジェクション対策）
+            ISSUE_TITLE="【L3: PR承認依頼】${REPO} #${PR_NUMBER} ${PR_TITLE_SAFE}"
             gh issue create \
               --repo "$MGT_REPO" \
-              --title "【L3: PR承認依頼】${REPO} #${PR_NUMBER} ${PR_TITLE}" \
+              --title "$ISSUE_TITLE" \
               --body "## 代表アクション
 
           👉 **[PR #${PR_NUMBER} を確認・Approve・マージする](${PR_URL})**
