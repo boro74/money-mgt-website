@@ -48,19 +48,23 @@ AI提案書生成・議事録自動化・顧客セルフ入力。
     weight = 20
   [[menu.main]]
     identifier = "junior-emp"
-    name = "就職・副業支援"
+    name = "副業・独立支援"
     url = "/junior-emp/"
     weight = 30
   [[menu.main]]
     identifier = "blog"
     name = "ブログ"
-    url = "https://www.money-mgt.net/blog/"
+    url = "/blog/"
     weight = 40
   [[menu.main]]
     identifier = "contact"
     name = "お問い合わせ"
     url = "/contact/"
     weight = 50
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]

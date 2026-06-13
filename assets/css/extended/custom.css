@@ -1,0 +1,300 @@
+/* ================================================
+   マネーマネジメント - プロフェッショナルデザイン
+   Target: 独立FP・税理士兼業FP 30-50代
+   ================================================ */
+
+/* ---------- カラー変数 ---------- */
+:root {
+  --mm-primary: #2563eb;
+  --mm-primary-dark: #1d4ed8;
+  --mm-primary-light: #eff6ff;
+  --mm-accent: #0ea5e9;
+  --mm-text: #0f172a;
+  --mm-text-muted: #475569;
+  --mm-border: #e2e8f0;
+  --mm-bg-soft: #f8fafc;
+  --mm-shadow: 0 4px 24px rgba(37,99,235,0.08);
+  --mm-radius: 10px;
+}
+
+/* ---------- ヒーローセクション ---------- */
+.home-info-wrapper {
+  background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 60%);
+  border-bottom: 1px solid var(--mm-border);
+  padding: 4rem 0 3rem;
+  text-align: center;
+}
+.home-info-wrapper .entry-content,
+.home-info-wrapper .post-content {
+  max-width: 720px;
+  margin: 0 auto;
+}
+.home-info-wrapper h1 {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: var(--mm-text);
+  margin-bottom: 0.75rem;
+}
+.home-info-wrapper p {
+  font-size: 1.05rem;
+  color: var(--mm-text-muted);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+/* ---------- CTAボタン ---------- */
+.btn {
+  display: inline-block;
+  padding: 0.75em 1.8em;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none !important;
+  transition: all 0.18s ease;
+  cursor: pointer;
+  border: 2px solid transparent;
+  white-space: nowrap;
+  width: fit-content;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37,99,235,0.25);
+}
+.btn:active { transform: translateY(0); }
+
+.btn-primary {
+  background: var(--mm-primary);
+  border-color: var(--mm-primary);
+  color: #fff !important;
+}
+.btn-primary:hover {
+  background: var(--mm-primary-dark);
+  border-color: var(--mm-primary-dark);
+}
+.btn-secondary {
+  background: transparent;
+  border-color: var(--mm-primary);
+  color: var(--mm-primary) !important;
+}
+.btn-secondary:hover {
+  background: var(--mm-primary-light);
+}
+.btn-large {
+  font-size: 1.05rem;
+  padding: 0.9em 2.2em;
+  border-radius: 10px;
+}
+
+.cta-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: center;
+  margin: 1.75rem 0 0;
+}
+
+/* ---------- CTAセクション（囲み） ---------- */
+.cta-section {
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+  border-radius: 16px;
+  padding: 2.5rem 2rem 3rem;
+  margin: 3rem 0;
+  text-align: center;
+  color: #fff;
+}
+.cta-section h2 {
+  color: #fff !important;
+  font-size: 1.5rem;
+  margin-top: 0;
+  border: none !important;
+}
+.cta-section p {
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 0.5rem;
+}
+.cta-section .btn-primary {
+  background: #fff;
+  border-color: #fff;
+  color: var(--mm-primary) !important;
+  font-size: 1.05rem;
+  padding: 0.85em 2em;
+}
+.cta-section .btn-primary:hover {
+  background: #f0f7ff;
+}
+
+/* ---------- サービスカード（トップページ） ---------- */
+.post-content h3 a,
+.post-content h3 a:visited {
+  color: var(--mm-primary) !important;
+  text-decoration: none;
+}
+.post-content h3 a:hover { text-decoration: underline; }
+
+/* サービス一覧をカード風に */
+.post-content h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--mm-primary);
+  margin-top: 0;
+  margin-bottom: 0.4rem;
+}
+
+/* ---------- セクション見出し ---------- */
+.post-content h2 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--mm-text);
+  margin-top: 3rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--mm-primary-light);
+}
+.post-content h2:first-child { margin-top: 2rem; }
+
+/* ---------- 料金テーブル ---------- */
+.post-content table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--mm-radius);
+  overflow: hidden;
+  box-shadow: var(--mm-shadow);
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+.post-content table th {
+  background: var(--mm-primary);
+  color: #fff;
+  font-weight: 700;
+  padding: 0.8em 1.1em;
+  text-align: left;
+  border: none;
+}
+.post-content table td {
+  padding: 0.7em 1.1em;
+  border-bottom: 1px solid var(--mm-border);
+  border-left: none;
+  border-right: none;
+}
+.post-content table tr:last-child td { border-bottom: none; }
+.post-content table tr:nth-child(even) td { background: var(--mm-bg-soft); }
+.post-content table tr:hover td { background: var(--mm-primary-light); transition: background 0.15s; }
+
+/* ---------- 機能リスト（###） ---------- */
+.post-content h3 {
+  margin-top: 1.75rem;
+  color: var(--mm-text);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+/* ---------- 水平線 ---------- */
+.post-content hr {
+  border: none;
+  border-top: 1px solid var(--mm-border);
+  margin: 2.5rem 0;
+}
+
+/* ---------- ナビゲーション強調 ---------- */
+#top-link { bottom: 1.5rem; right: 1.5rem; }
+
+/* ---------- フッター ---------- */
+.footer {
+  border-top: 1px solid var(--mm-border);
+  padding-top: 1.5rem;
+  color: var(--mm-text-muted);
+  font-size: 0.875rem;
+}
+
+/* ---------- レスポンシブ ---------- */
+@media (max-width: 640px) {
+  .home-info-wrapper { padding: 2.5rem 1rem 2rem; }
+  .home-info-wrapper h1 { font-size: 1.6rem; }
+  .cta-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .btn { text-align: center; width: 100%; box-sizing: border-box; }
+  .cta-section { padding: 2rem 1.25rem; }
+  .post-content table { font-size: 0.875rem; }
+  .post-content table th,
+  .post-content table td { padding: 0.5em 0.75em; }
+}
+
+/* ---------- サービスカード（グリッド） ---------- */
+.service-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0 2rem;
+}
+.service-card {
+  background: #fff;
+  border: 1px solid var(--mm-border);
+  border-radius: var(--mm-radius);
+  padding: 1.5rem 1.5rem 1.75rem;
+  box-shadow: var(--mm-shadow);
+  transition: transform 0.18s, box-shadow 0.18s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.service-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(37,99,235,0.13);
+}
+.service-card-icon {
+  font-size: 2rem;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+.service-card h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+.service-card h3 a { color: var(--mm-text) !important; }
+.service-card h3 a:hover { color: var(--mm-primary) !important; }
+.service-card p {
+  color: var(--mm-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  flex: 1;
+  margin: 0.25rem 0 0.75rem;
+}
+.service-card .btn { align-self: flex-start; font-size: 0.875rem; padding: 0.5em 1.2em; }
+
+/* ---------- 代表プロフィールサマリー ---------- */
+.about-summary {
+  background: var(--mm-bg-soft);
+  border: 1px solid var(--mm-border);
+  border-left: 4px solid var(--mm-primary);
+  border-radius: var(--mm-radius);
+  padding: 1.75rem 1.75rem 1.5rem;
+  margin: 1.5rem 0 2rem;
+  box-shadow: var(--mm-shadow);
+}
+.about-summary p {
+  color: var(--mm-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.75;
+  margin-bottom: 0.75rem;
+}
+.about-summary strong {
+  color: var(--mm-text);
+}
+.about-summary .btn {
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .about-summary { padding: 1.25rem 1.1rem; }
+}
+
+@media (max-width: 640px) {
+  .service-cards { grid-template-columns: 1fr; }
+  .service-card .btn { width: 100%; text-align: center; }
+}
