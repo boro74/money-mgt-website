@@ -62,6 +62,10 @@ AI提案書生成・議事録自動化・顧客セルフ入力。
     url = "/contact/"
     weight = 50
 
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+
 [outputs]
   home = ["HTML", "RSS", "JSON"]
 
