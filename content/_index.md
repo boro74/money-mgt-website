@@ -29,14 +29,14 @@ AI提案書生成・議事録自動化・顧客セルフ入力。
 <div class="service-card">
   <div class="service-card-icon">🏢</div>
   <h3><a href="/business/">法人・FP向けサービス</a></h3>
-  <p>FP事務所・金融機関向けのシステム開発・AIコンサルティング。Smart Associator（SA）で会員管理・イベント運営を自動化。</p>
+  <p>FP事務所・士業向けのシステム開発・AIコンサルティング。Smart Associator（SA）で会員管理・イベント運営を自動化。</p>
   <a href="/business/" class="btn btn-secondary">詳細を見る</a>
 </div>
 
 <div class="service-card">
   <div class="service-card-icon">🎯</div>
-  <h3><a href="/junior-emp/">就職・副業支援</a></h3>
-  <p>FP資格・金融知識を活かしたキャリア支援。副業・独立をご検討の方に向けたコンテンツを提供しています。</p>
+  <h3><a href="/junior-emp/">副業・独立支援</a></h3>
+  <p>FP資格・金融知識を活かした副業・独立支援。開業を検討しているFP向けのコンテンツを提供しています。</p>
   <a href="/junior-emp/" class="btn btn-secondary">詳細を見る</a>
 </div>
 

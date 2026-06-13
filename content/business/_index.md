@@ -14,14 +14,14 @@ url: "/business/"
 ## サービス一覧
 
 ### Smart Associator（SA）
-**FP協会・士業団体向け 統合コミュニティ管理プラットフォーム**
+**FP団体・士業向け 統合コミュニティ管理プラットフォーム**
 
 - 会員データベース・イベント管理
 - AI自動クイズ生成（Gemini API連携）
 - PAY.JP決済連携
 - 「事務作業90%削減」を目標設計
 
-[Smart Associatorの詳細 →](https://sub.fp-kfsc.com/)
+詳細はお問い合わせください。
 
 ---
 
