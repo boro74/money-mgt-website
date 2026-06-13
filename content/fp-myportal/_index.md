@@ -12,7 +12,7 @@ url: "/fp-myportal/"
 あなたは「顧客との会話」だけに集中できる。
 
 <div class="cta-buttons">
-  <a id="trial" href="https://fp.money-mgt.net/register" class="btn btn-primary">30日間 無料トライアルを始める</a>
+  <a id="trial" href="{{< app_url >}}/register" class="btn btn-primary">30日間 無料トライアルを始める</a>
 </div>
 
 ---
@@ -85,6 +85,6 @@ Google Chrome・Safari・Microsoft Edge（各最新版）推奨。PC・タブレ
 
 クレジットカード登録が必要です（トライアル期間中は課金なし）
 
-<a href="https://fp.money-mgt.net/register" class="btn btn-primary btn-large">無料トライアルを始める</a>
+<a href="{{< app_url >}}/register" class="btn btn-primary btn-large">無料トライアルを始める</a>
 
 </div>
