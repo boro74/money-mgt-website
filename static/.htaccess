@@ -2,6 +2,7 @@
 # WordPress /archives/ID/ → Hugo /blog/slug/ 301リダイレクト
 # 自動生成: scripts/migrate-blog.py
 # =================================================
+Options +SymLinksIfOwnerMatch
 RewriteEngine On
 
 RewriteRule ^archives/10/?$ /blog/ブログをはじめます/ [R=301,L]
