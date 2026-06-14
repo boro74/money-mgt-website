@@ -7,6 +7,7 @@ enableRobotsTXT = true
 buildDrafts = false
 buildFuture = false
 buildExpired = false
+paginate = 12
 
 [params]
   env = "production"

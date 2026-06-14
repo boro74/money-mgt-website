@@ -1,6 +1,7 @@
 ---
 title: "NHK受信料を節約！iTSCOMで年間2,160円お得にする方法"
 date: 2024-10-02
+slug: "371"
 description: "NHK受信料、毎月支払っている方は多いのではないでしょうか？実はこの受信料、NetflixやAmazon Prime Videoのように「毎月かかるサブスク」として考えることもできます。しかし、その値段はかなり高額です。 […]"
 categories:
   - "ライフプラン"
