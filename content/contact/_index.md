@@ -18,11 +18,11 @@ url: "/contact/"
 | 種別 | 内容 | フォーム |
 |------|------|--------|
 | **FPマイポータル** | 無料トライアル・機能・料金に関するご質問 | [FPマイポータルお問い合わせ](https://fp.money-mgt.net/contact) |
-| **法人・開発依頼** | システム開発・AIコンサル・受託開発のご相談 | [法人お問い合わせ（メール）](mailto:info@money-mgt.net) |
+| **法人・開発依頼** | システム開発・AIコンサル・受託開発のご相談 | [法人お問い合わせ（メール）](mailto:nabetani@money-mgt.net) |
 | **個人FP相談** | ライフプラン・家計見直しなどFP個人相談 | [FP個人相談フォーム](https://fp.money-mgt.net/fp-consult) |
-| **その他** | 上記以外のご質問・メディア掲載等 | [一般お問い合わせ（メール）](mailto:info@money-mgt.net) |
+| **その他** | 上記以外のご質問・メディア掲載等 | [一般お問い合わせ（メール）](mailto:nabetani@money-mgt.net) |
 
 ---
 
-**メールアドレス**: info@money-mgt.net  
+**メールアドレス**: nabetani@money-mgt.net  
 **対応時間**: 平日 10:00〜18:00（土日祝は翌営業日対応）
