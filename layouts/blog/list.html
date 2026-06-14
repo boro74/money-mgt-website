@@ -1,0 +1,121 @@
+{{- define "main" }}
+
+<header class="page-header">
+  <h1>{{ .Title }}</h1>
+</header>
+
+{{/* ===== 検索 + フィルター + ビュー切替バー ===== */}}
+<div class="blog-toolbar">
+
+  {{/* 検索ボックス */}}
+  <form class="blog-search-form" action="/search/" method="get" role="search">
+    <label class="sr-only" for="blog-search-input">キーワード検索</label>
+    <input id="blog-search-input" type="search" name="q"
+           placeholder="キーワードで検索…" autocomplete="off">
+    <button type="submit" aria-label="検索">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+    </button>
+  </form>
+
+  {{/* カテゴリフィルター */}}
+  <nav class="blog-cats" aria-label="カテゴリフィルター">
+    {{- $currentCat := "" }}
+    {{- if eq .Kind "term" }}{{ $currentCat = .Title }}{{ end }}
+    <a href="/blog/"
+       class="blog-cat-btn{{ if and (not (eq .Kind "term")) (eq .RelPermalink "/blog/") }} active{{ end }}">
+      すべて
+    </a>
+    {{- range site.Taxonomies.categories.ByCount }}
+    <a href="{{ .Page.RelPermalink }}"
+       class="blog-cat-btn{{ if eq $.Title .Page.Title }} active{{ end }}">
+      {{ .Page.Title }}<span class="cat-count">{{ .Count }}</span>
+    </a>
+    {{- end }}
+  </nav>
+
+  {{/* カード / リスト 切替 */}}
+  <div class="blog-view-toggle" role="group" aria-label="表示切替">
+    <button class="view-btn active" id="btn-card" aria-label="カード表示" title="カード表示">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+           fill="currentColor">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+    </button>
+    <button class="view-btn" id="btn-list" aria-label="リスト表示" title="リスト表示">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+        <line x1="8" y1="18" x2="21" y2="18"/>
+        <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/>
+        <line x1="3" y1="18" x2="3.01" y2="18"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+{{/* ===== 記事一覧 ===== */}}
+{{- $pages := .RegularPages }}
+{{- $paginator := .Paginate $pages }}
+
+<div class="blog-posts-grid" id="blog-posts-grid">
+{{- range $paginator.Pages }}
+<article class="post-entry">
+  {{- $isHidden := (.Param "cover.hiddenInList") | default (.Param "cover.hidden") | default false }}
+  {{- partial "cover.html" (dict "cxt" . "IsSingle" false "isHidden" $isHidden) }}
+  <header class="entry-header">
+    <h2>{{ .Title }}</h2>
+  </header>
+  {{- if (ne (.Param "hideSummary") true) }}
+  <div class="entry-content">
+    <p>{{ .Summary | plainify | htmlUnescape }}{{ if .Truncated }}…{{ end }}</p>
+  </div>
+  {{- end }}
+  <footer class="entry-footer">
+    {{- partial "post_meta.html" . -}}
+  </footer>
+  <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
+</article>
+{{- end }}
+</div>
+
+{{- if gt $paginator.TotalPages 1 }}
+<footer class="page-footer">
+  <nav class="pagination">
+    {{- if $paginator.HasPrev }}
+    <a class="prev" href="{{ $paginator.Prev.URL | absURL }}">«&nbsp;前のページ</a>
+    {{- end }}
+    {{- if $paginator.HasNext }}
+    <a class="next" href="{{ $paginator.Next.URL | absURL }}">次のページ&nbsp;»</a>
+    {{- end }}
+  </nav>
+</footer>
+{{- end }}
+
+<script>
+(function () {
+  var grid = document.getElementById('blog-posts-grid');
+  var btnCard = document.getElementById('btn-card');
+  var btnList = document.getElementById('btn-list');
+  if (!grid || !btnCard || !btnList) return;
+
+  var KEY = 'mm-blog-view';
+  var saved = localStorage.getItem(KEY) || 'card';
+
+  function setView(v) {
+    grid.classList.toggle('list-view', v === 'list');
+    btnCard.classList.toggle('active', v === 'card');
+    btnList.classList.toggle('active', v === 'list');
+    localStorage.setItem(KEY, v);
+  }
+
+  btnCard.addEventListener('click', function () { setView('card'); });
+  btnList.addEventListener('click', function () { setView('list'); });
+  setView(saved);
+})();
+</script>
+
+{{- end }}{{- /* end main */ -}}
