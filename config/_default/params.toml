@@ -1,1 +1,4 @@
+# appURL: FPマイポータル（外部SaaSアプリ）のURL。
+# baseURL（hugo.toml: https://www.money-mgt.net/）とは別サービスを指すため不一致は正常。
+# baseURL はサイト自体のURL、appURL はアプリへのリンク先URL。
 appURL = "https://fp.money-mgt.net"

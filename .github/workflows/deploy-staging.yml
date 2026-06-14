@@ -61,10 +61,6 @@ jobs:
       - name: Hugo ビルド（baseURL をステージング用に上書き・environment=staging）
         run: hugo --minify --baseURL "https://dev-hugo.money-mgt.net/" --environment staging
 
-      - name: ステージング用 .htaccess に差し替え（ブログリダイレクト不要・LOLIPOP互換）
-        run: |
-          echo "# Staging: blog redirects disabled" > public/.htaccess
-
       - name: FTP デプロイ → LOLIPOP dev-hugo環境
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:

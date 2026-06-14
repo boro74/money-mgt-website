@@ -24,6 +24,23 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Hugo セットアップ（テンプレート構文チェック用）
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.147.0'
+          extended: true
+
+      - name: Hugo ビルド（テンプレート構文エラー検出）
+        run: |
+          hugo --minify --baseURL "https://dev-hugo.money-mgt.net/" --environment staging \
+            --logLevel info 2>&1 | tee /tmp/hugo_build.log || true
+          if grep -q "ERROR\|WARN" /tmp/hugo_build.log; then
+            echo "Hugo ビルドで WARNING/ERROR が検出されました:"
+            grep "ERROR\|WARN" /tmp/hugo_build.log
+          else
+            echo "Hugo ビルド: テンプレート構文エラーなし"
+          fi
+
       - name: PR差分を取得（コンテンツファイル除外・コードファイル優先）
         env:
           GH_TOKEN: ${{ github.token }}
@@ -134,11 +151,9 @@ PYEOF
              - P1: 強く推奨
              - P2: 任意改善
 
-          4. Bash ツールで以下のコマンドを実行してPRにレビューコメントを投稿する：
-          gh pr comment ${PR_NUMBER} --repo ${REPO} --body "（レビュー本文）"
+          4. 以下のフォーマットでレビュー結果を出力する（標準出力のみ。コマンド実行は不要）：
 
-          コメント本文フォーマット：
-          ---
+          REVIEW_COMMENT_START
           ## 🤖 Claude QAレビュー
           ### サマリー
           <1〜2行でPRの変更内容とリスク評価>
@@ -150,11 +165,13 @@ PYEOF
           - ✅ マージ可（問題なし）
           - または ⚠️ 要確認（P1/P2のみ）
           - または 🔴 P0あり・マージ前に修正必須
-          ---
+          REVIEW_COMMENT_END
 
-          5. 最後に必ず Bash ツールで /tmp/qa_result.json を書き出すこと：
-          内容例（JSON形式を厳守）:
+          5. 最後に以下のフォーマットで重要度JSONを出力する：
+
+          QA_RESULT_START
           {"max_severity": "p0", "issues_text": "P0: config.toml - baseURL本番値がハードコード"}
+          QA_RESULT_END
 
           max_severity のルール：
           - P0問題が1件以上 → "p0"
@@ -164,18 +181,52 @@ PYEOF
 
           issues_text はP0/P1のみ記載（改行は \n）。P2のみ/問題なしの場合は空文字 "" でよい。
 
-          コマンド例：
-          Bash で実行: echo '{"max_severity":"ok","issues_text":""}' > /tmp/qa_result.json
-
           ## 注意事項
-          - コメント本文は1500文字以内
+          - レビューコメント本文は1500文字以内
           - 日本語で記述すること
+          - Bash/シェルコマンドの実行は不要。出力のみ行うこと
 
           実行日: $(date +%Y-%m-%d) PR: #${PR_NUMBER}
           PROMPT_EOF
           )
 
-          claude -p "$PROMPT" --allowedTools "Read,Bash,Glob,Grep"
+          # Bash ツールを除外してプロンプトインジェクション経由の任意コマンド実行リスクを排除する
+          # PR差分（ユーザー制御可能）がClaudeに渡されるため、self-hosted runner上でのBash実行を禁止
+          CLAUDE_OUTPUT=$(claude -p "$PROMPT" --allowedTools "Read,Glob,Grep" 2>&1)
+          echo "$CLAUDE_OUTPUT"
+
+          # レビューコメントを抽出してGitHub PRに投稿（安全なシェル変数経由）
+          REVIEW_BODY=$(echo "$CLAUDE_OUTPUT" | python3 -c "
+import sys, re
+text = sys.stdin.read()
+m = re.search(r'REVIEW_COMMENT_START\n(.*?)\nREVIEW_COMMENT_END', text, re.DOTALL)
+if m:
+    print(m.group(1)[:2000])
+else:
+    print('（レビュー本文抽出失敗）')
+")
+
+          # QA結果JSONを抽出してファイルに書き出す
+          echo "$CLAUDE_OUTPUT" | python3 -c "
+import sys, re, json
+text = sys.stdin.read()
+m = re.search(r'QA_RESULT_START\n(.*?)\nQA_RESULT_END', text, re.DOTALL)
+if m:
+    try:
+        data = json.loads(m.group(1).strip())
+        with open('/tmp/qa_result.json', 'w') as f:
+            json.dump(data, f)
+        print('qa_result.json 書き出し完了')
+    except Exception as e:
+        print(f'JSON解析失敗: {e}')
+else:
+    print('QA_RESULT_START/END マーカーが見つかりません')
+"
+
+          # PRにレビューコメントを投稿
+          if [ -n "$REVIEW_BODY" ] && [ "$REVIEW_BODY" != "（レビュー本文抽出失敗）" ]; then
+            gh pr comment "${PR_NUMBER}" --repo "${REPO}" --body "$REVIEW_BODY"
+          fi
 
       - name: P0/P1検出時に修正タスクをキューへ追加
         if: always()
@@ -209,7 +260,7 @@ PYEOF
           ASKPASS_SCRIPT=$(mktemp /tmp/askpass-XXXXXX.sh)
           printf '#!/bin/sh\necho "%s"\n' "${GH_TOKEN}" > "$ASKPASS_SCRIPT"
           chmod +x "$ASKPASS_SCRIPT"
-          GIT_ASKPASS="$ASKPASS_SCRIPT" GIT_USERNAME="x-access-token" git clone https://github.com/boro74/money-mgt.git mgt-qa-tmp
+          GIT_ASKPASS="$ASKPASS_SCRIPT" git clone https://github.com/boro74/money-mgt.git mgt-qa-tmp
           rm -f "$ASKPASS_SCRIPT"
           cd mgt-qa-tmp
           # push用のリモートURLも同様に認証情報をURLに埋め込まない設定
@@ -217,8 +268,6 @@ PYEOF
           printf '#!/bin/sh\necho "%s"\n' "${GH_TOKEN}" > "$PUSH_ASKPASS"
           chmod +x "$PUSH_ASKPASS"
           git config core.askPass "$PUSH_ASKPASS"
-          GIT_USERNAME="x-access-token"
-          export GIT_USERNAME
 
           TASK_ID="$TASK_ID" \
           REPO="$REPO" \

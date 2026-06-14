@@ -129,7 +129,7 @@ body, .post-content, .entry-content {
 }
 
 #menu a:hover,
-#menu a .active {
+#menu a.active {
   color: var(--mm-primary) !important;
   background: var(--mm-primary-light);
 }
