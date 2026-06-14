@@ -24,6 +24,11 @@ buildExpired = false
   disableScrollToTop = false
   disableThemeToggle = true
 
+  [params.label]
+    text = "マネーマネジメント"
+    icon = "images/logo.png"
+    iconHeight = 40
+
   [params.homeInfoParams]
     Title = "FPの仕事を、もっと自分らしく。"
     Content = """
