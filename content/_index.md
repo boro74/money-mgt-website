@@ -1,84 +1,60 @@
 ---
-title: "マネーマネジメント | FP・独立FP向けAIツール"
-description: "独立FP向けAI業務支援SaaS「FPマイポータル」を提供。AI提案書生成・議事録自動化・顧客セルフ入力フォームで業務時間を最大40%削減。"
+title: "マネーマネジメント | FP業界特化のテクノロジースタジオ"
+description: "独立FP・FP団体・FP志望者向けのAIツールと業務システム開発。FPマイポータル（AI提案書生成）・Smart Associator・法人AIコンサルを提供。"
 ---
 
-<p class="hero-sub">AI提案書生成・議事録自動化・顧客セルフ入力で、独立FPの事務作業を劇的に削減。</p>
+<p class="hero-sub">独立FPから FP団体・FP志望者まで——<br>テクノロジーで、FP業務の「あたりまえ」を変える。</p>
 
 <div class="cta-buttons">
-  <a href="/fp-myportal/#trial" class="btn btn-primary btn-large">30日間 無料でためす</a>
-  <a href="/fp-myportal/" class="btn btn-secondary btn-large">機能・料金を見る</a>
+  <a href="#services" class="btn btn-primary btn-large">サービスを見る</a>
+  <a href="/fp-myportal/" class="btn btn-secondary btn-large">FPマイポータル</a>
 </div>
 
-<div class="stats-strip fade-in">
-  <div class="stats-item">
-    <span class="stats-number">30分 → 3分</span>
-    <span class="stats-label">提案書作成時間</span>
+---
+
+## マネーマネジメントが担う、3つの領域
+
+<div class="feature-cards fade-in">
+  <div class="feature-card">
+    <div class="feature-card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+    </div>
+    <p class="feature-title">独立FP・FP事務所</p>
+    <p class="feature-body">提案書作成・議事録・顧客管理をAIで自動化。1人FPでも大手に負けない質とスピードを実現し、本来の「相談業務」に集中できる環境をつくる。</p>
   </div>
-  <div class="stats-item">
-    <span class="stats-number">最大40%</span>
-    <span class="stats-label">業務時間の削減</span>
+  <div class="feature-card">
+    <div class="feature-card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="6" height="17"/><rect x="15" y="9" width="6" height="12"/>
+        <line x1="3" y1="21" x2="21" y2="21"/>
+        <line x1="9" y1="8" x2="15" y2="8"/>
+        <line x1="9" y1="12" x2="15" y2="12"/>
+      </svg>
+    </div>
+    <p class="feature-title">FP団体・法人</p>
+    <p class="feature-body">会員管理・イベント運営・業務システムのDX化。FP分野を知り尽くした開発者だからこそ、現場に即したシステムを最短で届けられる。</p>
   </div>
-  <div class="stats-item">
-    <span class="stats-number">¥3,300〜</span>
-    <span class="stats-label">月額（税込）・30日無料</span>
+  <div class="feature-card">
+    <div class="feature-card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+        <polyline points="17 6 23 6 23 12"/>
+      </svg>
+    </div>
+    <p class="feature-title">FP資格活用・副業・独立</p>
+    <p class="feature-body">FP資格を持ちながら活かせていない方へ。副業から独立開業まで、FP×テクノロジーの新しい働き方を一緒に設計する。</p>
   </div>
 </div>
 
 ---
 
-## 独立FPが抱える、3つの時間泥棒
-
-<div class="pain-cards fade-in">
-  <div class="pain-card">
-    <div class="pain-card-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <polyline points="12 6 12 12 16 14"/>
-      </svg>
-    </div>
-    <p class="pain-card-title">提案書に追われる</p>
-    <p class="pain-card-body">1件あたり平均60〜120分の手作業。件数が増えるほど残業が増える。</p>
-  </div>
-  <div class="pain-card">
-    <div class="pain-card-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-        <polyline points="14 2 14 8 20 8"/>
-        <line x1="16" y1="13" x2="8" y2="13"/>
-        <line x1="16" y1="17" x2="8" y2="17"/>
-      </svg>
-    </div>
-    <p class="pain-card-title">議事録が翌日になる</p>
-    <p class="pain-card-body">記憶頼りで書くと情報が抜け落ちる。「言った・言わない」のリスクも。</p>
-  </div>
-  <div class="pain-card">
-    <div class="pain-card-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
-        <line x1="8" y1="18" x2="21" y2="18"/>
-        <line x1="3" y1="6" x2="3.01" y2="6"/>
-        <line x1="3" y1="12" x2="3.01" y2="12"/>
-        <line x1="3" y1="18" x2="3.01" y2="18"/>
-      </svg>
-    </div>
-    <p class="pain-card-title">ヒアリングが属人的</p>
-    <p class="pain-card-body">聞き忘れ・入力ミスが後から発覚。毎回一から聞き直す非効率さ。</p>
-  </div>
-</div>
-
-「もっとお客様と向き合う時間を作りたい」——FPなら誰もが感じたことがある、あの葛藤を解決します。
-
-<div class="cta-buttons">
-  <a href="/fp-myportal/" class="btn btn-primary">FPマイポータルで解決する →</a>
-</div>
-
----
-
-## マネーマネジメントのサービス
+## サービス {#services}
 
 <div class="service-cards fade-in">
 
@@ -131,26 +107,19 @@ description: "独立FP向けAI業務支援SaaS「FPマイポータル」を提�
 
 ---
 
-## FPマイポータルの使い方
+## 旗艦プロダクト：FPマイポータル
 
-<div class="process-flow fade-in">
-  <div class="process-step">
-    <div class="process-num">1</div>
-    <p class="process-title">顧客情報を入力</p>
-    <p class="process-body">専用フォームに基本情報を入力。または顧客自身がスマートフォンでセルフ入力。</p>
-  </div>
-  <div class="process-arrow">›</div>
-  <div class="process-step">
-    <div class="process-num">2</div>
-    <p class="process-title">AIが自動生成</p>
-    <p class="process-body">提案書の草案・面談議事録をAIが3分以内に生成。手入力ゼロ。</p>
-  </div>
-  <div class="process-arrow">›</div>
-  <div class="process-step">
-    <div class="process-num">3</div>
-    <p class="process-title">確認・調整して完成</p>
-    <p class="process-body">内容を確認・微調整するだけ。顧客への提案書納品まで最短15分。</p>
-  </div>
+<div class="about-summary fade-in">
+
+独立FP専用の AI業務アシスタント。顧客情報を入力するだけで提案書の草案を **3分で生成**。面談後の議事録自動化・顧客セルフ入力フォームも搭載し、繰り返しの事務作業をまるごとAIが肩代わりします。
+
+**提案書作成 30分 → 3分 ／ 業務時間 最大40%削減 ／ 月額¥3,300（税込）**
+
+<div class="cta-buttons">
+  <a href="/fp-myportal/#trial" class="btn btn-primary btn-large">30日間 無料でためす</a>
+  <a href="/fp-myportal/" class="btn btn-secondary">機能・料金を詳しく見る</a>
+</div>
+
 </div>
 
 ---
@@ -170,7 +139,6 @@ description: "独立FP向けAI業務支援SaaS「FPマイポータル」を提�
 それがマネーマネジメントの強みです。
 
 個人のお金の相談も受け付けています。ライフプラン・家計見直し・資産運用など、お気軽にどうぞ。
-<a href="/contact/">→ FP個人相談フォームへ</a>
 
 <a href="/contact/" class="btn btn-secondary">代表へ相談する →</a>
 
