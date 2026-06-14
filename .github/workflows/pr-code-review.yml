@@ -24,18 +24,79 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: PR差分を取得
+      - name: PR差分を取得（コンテンツファイル除外・コードファイル優先）
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh pr diff ${{ github.event.pull_request.number }} \
-            --repo ${{ github.repository }} > /tmp/pr_diff.txt
-          LINES=$(wc -l < /tmp/pr_diff.txt)
-          echo "diff: ${LINES} 行"
-          if [ "$LINES" -gt 3000 ]; then
-            head -3000 /tmp/pr_diff.txt > /tmp/pr_diff_trimmed.txt
-            echo "（3000行超のため先頭3000行のみ）" >> /tmp/pr_diff_trimmed.txt
-            mv /tmp/pr_diff_trimmed.txt /tmp/pr_diff.txt
+            --repo ${{ github.repository }} > /tmp/pr_diff_full.txt
+          TOTAL=$(wc -l < /tmp/pr_diff_full.txt)
+          echo "差分合計: ${TOTAL} 行"
+
+          if [ "$TOTAL" -le 3000 ]; then
+            cp /tmp/pr_diff_full.txt /tmp/pr_diff.txt
+            echo "3000行以内のためそのまま使用"
+          else
+            echo "3000行超 → コンテンツファイルを除外して再構成"
+            python3 << 'PYEOF'
+import re
+from pathlib import Path
+
+# コードレビュー不要なコンテンツパス（先頭一致）
+CONTENT_PATTERNS = [
+    r'^content/',        # Hugo ブログ記事・コンテンツ
+    r'^static/images/',  # 画像ファイルのプレースホルダー
+    r'^public/',         # Hugo ビルド成果物
+]
+
+full_diff = Path('/tmp/pr_diff_full.txt').read_text(errors='replace')
+
+# diff --git a/... b/... 単位でファイル別に分割
+sections = re.split(r'(?=^diff --git )', full_diff, flags=re.MULTILINE)
+
+code_parts = []
+excluded = []
+
+for section in sections:
+    if not section.strip():
+        continue
+    m = re.match(r'diff --git a/(.+?) b/', section)
+    if not m:
+        code_parts.append(section)
+        continue
+    filepath = m.group(1)
+    if any(re.match(p, filepath) for p in CONTENT_PATTERNS):
+        excluded.append(filepath)
+    else:
+        code_parts.append(section)
+
+code_diff = ''.join(code_parts)
+code_lines = code_diff.count('\n')
+
+note = ''
+if excluded:
+    file_list = '\n'.join(f'  - {f}' for f in excluded[:30])
+    if len(excluded) > 30:
+        file_list += f'\n  ...他 {len(excluded) - 30} 件'
+    note = (
+        f'---\n'
+        f'📋 レビュー対象外（コンテンツファイル {len(excluded)} 件・コードレビュー不要のため除外）\n'
+        f'{file_list}\n'
+        f'---\n\n'
+    )
+
+print(f"コードファイル差分: {code_lines} 行 / 除外コンテンツ: {len(excluded)} 件")
+
+final = note + code_diff
+if code_lines > 5000:
+    lines = final.splitlines()[:5000]
+    lines.append('（コードファイルのみで5000行超のため以降省略）')
+    final = '\n'.join(lines)
+    print("警告: コードファイルのみでも5000行超 → 先頭5000行に切り詰め")
+
+Path('/tmp/pr_diff.txt').write_text(final)
+print("差分ファイル生成完了: /tmp/pr_diff.txt")
+PYEOF
           fi
 
       - name: Claudeでコードレビュー実行
