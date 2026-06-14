@@ -7,7 +7,8 @@ enableRobotsTXT = true
 buildDrafts = false
 buildFuture = false
 buildExpired = false
-paginate = 12
+[pagination]
+  pagerSize = 12
 
 [params]
   env = "production"
