@@ -1,0 +1,34 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#dc2626"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- Decorative circles -->
+  <circle cx="80" cy="80" r="220" fill="rgba(255,255,255,0.06)"/>
+  <circle cx="1120" cy="550" r="280" fill="rgba(255,255,255,0.06)"/>
+  <circle cx="1050" cy="80" r="160" fill="rgba(255,255,255,0.04)"/>
+  <!-- Icon area -->
+  
+        <!-- Shield -->
+        <path d="M600,140 L760,200 L760,340 Q760,440 600,490 Q440,440 440,340 L440,200 Z"
+              fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.7)" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M600,170 L740,222 L740,336 Q740,418 600,460 Q460,418 460,336 L460,222 Z"
+              fill="rgba(255,255,255,0.15)"/>
+        <text x="600" y="345" font-size="90" text-anchor="middle" dominant-baseline="middle"
+              fill="rgba(255,255,255,0.85)" font-family="serif">✓</text>
+    
+  <!-- Bottom bar -->
+  <rect x="0" y="530" width="1200" height="100" fill="rgba(0,0,0,0.25)"/>
+  <!-- Category label -->
+  <text x="600" y="480" font-size="52" text-anchor="middle" dominant-baseline="middle"
+        fill="white" font-family="Noto Sans JP, Hiragino Kaku Gothic Pro, Yu Gothic, Meiryo, sans-serif"
+        font-weight="900" letter-spacing="2">リスクと保険</text>
+  <!-- Site name -->
+  <text x="600" y="580" font-size="26" text-anchor="middle" dominant-baseline="middle"
+        fill="rgba(255,255,255,0.75)" font-family="Noto Sans JP, Hiragino Kaku Gothic Pro, Yu Gothic, Meiryo, sans-serif"
+        font-weight="500" letter-spacing="4">マネーマネジメント</text>
+</svg>

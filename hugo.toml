@@ -24,6 +24,11 @@ buildExpired = false
   disableScrollToTop = false
   disableThemeToggle = true
 
+  [params.cover]
+    hidden = false
+    hiddenInList = false
+    hiddenInSingle = false
+
   [params.label]
     text = "マネーマネジメント"
     icon = "images/logo.png"

@@ -10,6 +10,11 @@ tags:
   - "NISAとiDeCoの比較"
 aliases:
   - /archives/858/
+cover:
+  image: "/images/eyecatch/life-plan.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 待ちに待った夏のボーナス！会社員の皆さん、今期の使い道はもう決まりましたか？

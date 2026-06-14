@@ -6,6 +6,11 @@ categories:
   - "金融資産運用設計"
 aliases:
   - /archives/165/
+cover:
+  image: "/images/eyecatch/investment.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 ##  一括投資の魅力とリスク

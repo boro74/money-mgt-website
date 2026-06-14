@@ -11,6 +11,11 @@ tags:
   - "こども加算"
 aliases:
   - /archives/570/
+cover:
+  image: "/images/eyecatch/life-plan.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 ### はじめに：物価高、家計は大丈夫ですか？

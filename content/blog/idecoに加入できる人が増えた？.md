@@ -6,6 +6,11 @@ categories:
   - "ライフプラン"
 aliases:
   - /archives/31/
+cover:
+  image: "/images/eyecatch/life-plan.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 企業型確定拠出年金(企業型DC)の制度のある会社員の方！

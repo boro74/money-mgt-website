@@ -9,6 +9,11 @@ tags:
   - "カーローン"
 aliases:
   - /archives/666/
+cover:
+  image: "/images/eyecatch/life-plan.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 「頭金なしで新車に乗れる！」「月々の支払いがラクラク！」そんな謳い文句で人気の「残価設定型クレジット」、通称「残クレ」。CMなどで見聞きする機会も増え、手軽に新車に乗れる夢のような仕組みだと感じている方も多いのではないでしょうか？

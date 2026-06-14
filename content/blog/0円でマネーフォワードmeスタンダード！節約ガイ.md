@@ -9,6 +9,11 @@ tags:
   - "スタンダードプラン"
 aliases:
   - /archives/288/
+cover:
+  image: "/images/eyecatch/life-plan.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 みなさんはマネーフォワードMEを使っていますか？

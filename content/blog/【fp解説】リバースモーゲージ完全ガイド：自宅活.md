@@ -8,6 +8,11 @@ tags:
   - "FP"
 aliases:
   - /archives/686/
+cover:
+  image: "/images/eyecatch/realestate.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 「老後の生活資金、大丈夫かな？」「住み慣れた自宅を離れたくないけど、手元の資金が心もとない…」そんな不安を感じている方もいらっしゃるのではないでしょうか。今日のテーマは、そんな皆さんの悩みを解決するかもしれない一つの選択肢、「リバースモーゲージ」です。

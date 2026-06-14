@@ -12,6 +12,11 @@ tags:
   - "スキルアップ"
 aliases:
   - /archives/642/
+cover:
+  image: "/images/eyecatch/life-plan.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 「**r > g**」という言葉、聞いたことはありますか？

@@ -7,6 +7,11 @@ categories:
   - "金融資産運用設計"
 aliases:
   - /archives/851/
+cover:
+  image: "/images/eyecatch/life-plan.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 住宅を購入した後、「毎月の余裕資金をどう使うべきか？」という相談は、FP面談の中でも特に多いテーマのひとつです。選択肢は大きく２つ——**住宅ローンの繰り上げ返済** か、**新NISAを活用した積立投資** か。

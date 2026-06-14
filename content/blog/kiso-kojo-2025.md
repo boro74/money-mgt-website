@@ -8,6 +8,11 @@ tags:
   - "FP"
 aliases:
   - /archives/551/
+cover:
+  image: "/images/eyecatch/tax.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 今回は、最近ニュースなどで耳にする機会が増えた「基礎控除の引き上げ」について、まず**「何がどう変わるのか」という事実を整理し、その上でFPとして感じる「正直な意見や懸念」** をストレートにお話ししたいと思います。良い話だけじゃない、税制の本質に切り込んでいきます。

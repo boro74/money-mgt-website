@@ -12,6 +12,11 @@ tags:
   - "インデックス投資"
 aliases:
   - /archives/788/
+cover:
+  image: "/images/eyecatch/investment.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 * * *

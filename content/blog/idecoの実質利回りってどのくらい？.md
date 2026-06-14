@@ -6,6 +6,11 @@ categories:
   - "ライフプラン"
 aliases:
   - /archives/40/
+cover:
+  image: "/images/eyecatch/life-plan.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 ### iDecoってどのくらいお得なのか？

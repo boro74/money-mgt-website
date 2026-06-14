@@ -9,6 +9,11 @@ tags:
   - "キャッシュフロー"
 aliases:
   - /archives/773/
+cover:
+  image: "/images/eyecatch/life-plan.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 「断捨離」や「ミニマリズム」って聞くと、おしゃれなライフスタイル、あるいはちょっとストイックな生活を想像するかもしれませんね。でも、実はこれ、単なる流行りや精神論で終わらないんです。私はあえて言いたい。「物を捨てることは、あなたの資産形成に直結する、極めて現実的な戦略である！」と。

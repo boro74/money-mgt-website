@@ -8,6 +8,11 @@ tags:
   - "FP"
 aliases:
   - /archives/489/
+cover:
+  image: "/images/eyecatch/life-plan.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 さて皆さん、突然ですが、もし大きな病気やケガで入院・手術なんてことになったら…医療費、いくらかかるか想像できますか？「え、考えたくない…」「保険入ってるから大丈夫っしょ？」なんて声が聞こえてきそうですね。

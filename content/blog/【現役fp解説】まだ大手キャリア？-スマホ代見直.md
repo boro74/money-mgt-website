@@ -10,6 +10,11 @@ tags:
   - "サブブランド"
 aliases:
   - /archives/574/
+cover:
+  image: "/images/eyecatch/life-plan.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 突然ですが、毎月のスマホ代、いくら払っていますか？

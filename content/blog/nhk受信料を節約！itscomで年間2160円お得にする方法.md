@@ -14,6 +14,11 @@ tags:
   - "NHK衛星契約"
 aliases:
   - /archives/371/
+cover:
+  image: "/images/eyecatch/life-plan.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 NHK受信料、毎月支払っている方は多いのではないでしょうか？実はこの受信料、NetflixやAmazon Prime Videoのように「毎月かかるサブスク」として考えることもできます。しかし、その値段はかなり高額です。特に、NHKの衛星契約をしている方にとっては「見ていない番組も多いのに、毎月これだけ払うのは…」と感じることもあるかもしれません。
