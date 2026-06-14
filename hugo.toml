@@ -38,10 +38,6 @@ buildExpired = false
 
   [params.homeInfoParams]
     Title = "FPの仕事を、もっと自分らしく。"
-    Content = """
-AI提案書生成・議事録自動化・顧客セルフ入力。
-独立FPが「相談に集中する時間」を取り戻すSaaSツール。
-"""
 
   [[params.socialIcons]]
     name = "X"
