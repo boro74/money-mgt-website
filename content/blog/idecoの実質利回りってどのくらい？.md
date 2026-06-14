@@ -7,7 +7,7 @@ categories:
 aliases:
   - /archives/40/
 cover:
-  image: "/images/eyecatch/life-plan.svg"
+  image: "/images/blog/40.jpg"
   alt: ""
   hidden: false
   hiddenInList: false

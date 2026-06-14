@@ -9,7 +9,7 @@ tags:
 aliases:
   - /archives/551/
 cover:
-  image: "/images/eyecatch/tax.svg"
+  image: "/images/blog/551.jpg"
   alt: ""
   hidden: false
   hiddenInList: false

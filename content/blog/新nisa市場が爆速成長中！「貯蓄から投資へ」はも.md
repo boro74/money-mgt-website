@@ -13,7 +13,7 @@ tags:
 aliases:
   - /archives/788/
 cover:
-  image: "/images/eyecatch/investment.svg"
+  image: "/images/blog/788.jpg"
   alt: ""
   hidden: false
   hiddenInList: false

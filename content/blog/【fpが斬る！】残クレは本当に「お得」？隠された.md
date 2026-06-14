@@ -10,7 +10,7 @@ tags:
 aliases:
   - /archives/666/
 cover:
-  image: "/images/eyecatch/life-plan.svg"
+  image: "/images/blog/666.jpg"
   alt: ""
   hidden: false
   hiddenInList: false

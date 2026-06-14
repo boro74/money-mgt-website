@@ -9,7 +9,7 @@ tags:
 aliases:
   - /archives/686/
 cover:
-  image: "/images/eyecatch/realestate.svg"
+  image: "/images/blog/686.jpg"
   alt: ""
   hidden: false
   hiddenInList: false

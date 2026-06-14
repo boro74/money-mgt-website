@@ -15,7 +15,7 @@ tags:
 aliases:
   - /archives/371/
 cover:
-  image: "/images/eyecatch/life-plan.svg"
+  image: "/images/blog/371.jpg"
   alt: ""
   hidden: false
   hiddenInList: false

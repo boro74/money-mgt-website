@@ -12,7 +12,7 @@ tags:
 aliases:
   - /archives/570/
 cover:
-  image: "/images/eyecatch/life-plan.svg"
+  image: "/images/blog/570.jpg"
   alt: ""
   hidden: false
   hiddenInList: false

@@ -14,7 +14,7 @@ tags:
 aliases:
   - /archives/405/
 cover:
-  image: "/images/eyecatch/life-plan.svg"
+  image: "/images/blog/405.jpg"
   alt: ""
   hidden: false
   hiddenInList: false

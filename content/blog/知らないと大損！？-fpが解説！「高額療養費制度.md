@@ -9,7 +9,7 @@ tags:
 aliases:
   - /archives/489/
 cover:
-  image: "/images/eyecatch/life-plan.svg"
+  image: "/images/blog/489.jpg"
   alt: ""
   hidden: false
   hiddenInList: false

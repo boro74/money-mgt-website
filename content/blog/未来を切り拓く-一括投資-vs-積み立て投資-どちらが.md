@@ -7,7 +7,7 @@ categories:
 aliases:
   - /archives/165/
 cover:
-  image: "/images/eyecatch/investment.svg"
+  image: "/images/blog/165.jpg"
   alt: ""
   hidden: false
   hiddenInList: false

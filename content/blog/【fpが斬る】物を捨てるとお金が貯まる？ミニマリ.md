@@ -10,7 +10,7 @@ tags:
 aliases:
   - /archives/773/
 cover:
-  image: "/images/eyecatch/life-plan.svg"
+  image: "/images/blog/773.jpg"
   alt: ""
   hidden: false
   hiddenInList: false
