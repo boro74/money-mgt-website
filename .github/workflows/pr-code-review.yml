@@ -56,56 +56,56 @@ jobs:
           else
             echo "3000行超 → コンテンツファイルを除外して再構成"
             python3 << 'PYEOF'
-            import re
-            from pathlib import Path
+          import re
+          from pathlib import Path
 
-            CONTENT_PATTERNS = [
-                r'^content/',
-                r'^static/images/',
-                r'^public/',
-            ]
+          CONTENT_PATTERNS = [
+              r'^content/',
+              r'^static/images/',
+              r'^public/',
+          ]
 
-            full_diff = Path('/tmp/pr_diff_full.txt').read_text(errors='replace')
-            sections = re.split(r'(?=^diff --git )', full_diff, flags=re.MULTILINE)
+          full_diff = Path('/tmp/pr_diff_full.txt').read_text(errors='replace')
+          sections = re.split(r'(?=^diff --git )', full_diff, flags=re.MULTILINE)
 
-            code_parts = []
-            excluded = []
+          code_parts = []
+          excluded = []
 
-            for section in sections:
-                if not section.strip():
-                    continue
-                m = re.match(r'diff --git a/(.+?) b/', section)
-                if not m:
-                    code_parts.append(section)
-                    continue
-                filepath = m.group(1)
-                if any(re.match(p, filepath) for p in CONTENT_PATTERNS):
-                    excluded.append(filepath)
-                else:
-                    code_parts.append(section)
+          for section in sections:
+              if not section.strip():
+                  continue
+              m = re.match(r'diff --git a/(.+?) b/', section)
+              if not m:
+                  code_parts.append(section)
+                  continue
+              filepath = m.group(1)
+              if any(re.match(p, filepath) for p in CONTENT_PATTERNS):
+                  excluded.append(filepath)
+              else:
+                  code_parts.append(section)
 
-            code_diff = ''.join(code_parts)
-            code_lines = code_diff.count('\n')
+          code_diff = ''.join(code_parts)
+          code_lines = code_diff.count('\n')
 
-            note = ''
-            if excluded:
-                file_list = '\n'.join(f'  - {f}' for f in excluded[:30])
-                if len(excluded) > 30:
-                    file_list += f'\n  ...他 {len(excluded) - 30} 件'
-                note = f'---\n📋 レビュー対象外（コンテンツファイル {len(excluded)} 件除外）\n{file_list}\n---\n\n'
+          note = ''
+          if excluded:
+              file_list = '\n'.join(f'  - {f}' for f in excluded[:30])
+              if len(excluded) > 30:
+                  file_list += f'\n  ...他 {len(excluded) - 30} 件'
+              note = f'---\n📋 レビュー対象外（コンテンツファイル {len(excluded)} 件除外）\n{file_list}\n---\n\n'
 
-            print(f"コードファイル差分: {code_lines} 行 / 除外コンテンツ: {len(excluded)} 件")
+          print(f"コードファイル差分: {code_lines} 行 / 除外コンテンツ: {len(excluded)} 件")
 
-            final = note + code_diff
-            if code_lines > 5000:
-                lines = final.splitlines()[:5000]
-                lines.append('（コードファイルのみで5000行超のため以降省略）')
-                final = '\n'.join(lines)
-                print("警告: コードファイルのみでも5000行超 → 先頭5000行に切り詰め")
+          final = note + code_diff
+          if code_lines > 5000:
+              lines = final.splitlines()[:5000]
+              lines.append('（コードファイルのみで5000行超のため以降省略）')
+              final = '\n'.join(lines)
+              print("警告: コードファイルのみでも5000行超 → 先頭5000行に切り詰め")
 
-            Path('/tmp/pr_diff.txt').write_text(final)
-            print("差分ファイル生成完了: /tmp/pr_diff.txt")
-            PYEOF
+          Path('/tmp/pr_diff.txt').write_text(final)
+          print("差分ファイル生成完了: /tmp/pr_diff.txt")
+          PYEOF
           fi
 
       - name: Claudeでコードレビュー実行
