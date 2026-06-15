@@ -1,28 +1,25 @@
 #!/usr/bin/env python3
 """
 Hugo ブログ草案自動生成スクリプト
-- Claude API で Markdown 草案を生成
+- claude CLI (-p) で Markdown 草案を生成（ANTHROPIC_API_KEY 不要）
 - content/blog/{slug}.md に draft: true で保存
 - data/hugo-blog-topic-log.json を更新
 - git commit & push (develop ブランチ)
 - money-mgt に L3 Issue 起票
 
 使用環境変数:
-  ANTHROPIC_API_KEY  : Claude API キー
-  GH_TOKEN           : GitHub Personal Access Token (repo スコープ)
-  GH_REPO            : リポジトリ名 (例: boro74/money-mgt-website)
+  GH_TOKEN  : GitHub Personal Access Token (repo スコープ)
+  GH_REPO   : リポジトリ名 (例: boro74/money-mgt-website)
 """
 
 import json
 import os
 import re
 import subprocess
-import sys
 import tempfile
 from datetime import date
 from pathlib import Path
 
-import anthropic
 import requests
 
 # ============================================================
@@ -49,7 +46,6 @@ BLOG_DIR = REPO_ROOT / "content" / "blog"
 STAGING_URL = "https://dev-hugo.money-mgt.net"
 MGT_REPO = "boro74/money-mgt"
 
-# FP事業者向けコンテンツを除外するキーワード
 _FP_BIZDEV_KEYWORDS = [
     "FPマイポータル", "FP My Portal", "Smart Associator",
     "FP業務効率化", "提案書作成 FP", "独立FP向け", "FP事務所向け",
@@ -89,12 +85,10 @@ def collect_existing_titles() -> list[str]:
 
 
 # ============================================================
-# Step 3: Claude API で草案生成
+# Step 3: claude CLI で草案生成
 # ============================================================
 
 def generate_draft(pillar_key: str, existing_titles: list[str]) -> dict:
-    client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
-
     today = date.today().isoformat()
     pillar_desc = PILLARS[pillar_key]
     existing_str = "\n".join(f"- {t}" for t in existing_titles[:30])
@@ -117,7 +111,7 @@ def generate_draft(pillar_key: str, existing_titles: list[str]) -> dict:
 ## 既存記事タイトル（重複禁止）
 {existing_str}
 
-## 出力形式（必ずこの JSON のみを出力）
+## 出力形式（必ずこの JSON のみを出力すること。説明文・前置き不要）
 {{
   "title": "記事タイトル（30〜50文字・SEOを意識）",
   "slug": "url-slug-in-english-hyphenated",
@@ -129,13 +123,18 @@ def generate_draft(pillar_key: str, existing_titles: list[str]) -> dict:
 生成日: {today}
 """
 
-    resp = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=4096,
-        messages=[{"role": "user", "content": prompt}],
+    result = subprocess.run(
+        ["claude", "-p", prompt, "--output-format", "text"],
+        capture_output=True,
+        text=True,
+        timeout=120,
     )
 
-    raw = resp.content[0].text.strip()
+    if result.returncode != 0:
+        raise RuntimeError(f"claude CLI 失敗 (exit {result.returncode}):\n{result.stderr[:500]}")
+
+    raw = result.stdout.strip()
+
     # JSON ブロック抽出
     json_match = re.search(r'\{[\s\S]+\}', raw)
     if not json_match:
@@ -156,7 +155,7 @@ def generate_draft(pillar_key: str, existing_titles: list[str]) -> dict:
 # Step 4: Markdown ファイル生成
 # ============================================================
 
-def write_markdown(pillar_key: str, data: dict) -> Path:
+def write_markdown(pillar_key: str, data: dict) -> tuple[Path, str]:
     today = date.today().isoformat()
     category = CATEGORIES[pillar_key]
     slug = re.sub(r'[^a-z0-9-]', '', data["slug"].lower().replace(' ', '-'))
@@ -203,7 +202,7 @@ def update_topic_log(log: dict, slug: str, pillar_key: str) -> None:
         "draft": True,
     })
     TOPIC_LOG_PATH.write_text(json.dumps(log, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"[Step 5] topic-log 更新完了")
+    print("[Step 5] topic-log 更新完了")
 
 
 # ============================================================
@@ -214,7 +213,6 @@ def git_commit_push(filepath: Path, slug: str) -> None:
     gh_token = os.environ.get("GH_TOKEN", "")
     today = date.today().isoformat()
 
-    # GIT_ASKPASS スクリプト経由でトークンを渡す（ログ漏洩防止）
     askpass = tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False)
     askpass.write(f'#!/bin/sh\necho "{gh_token}"\n')
     askpass.close()
@@ -234,13 +232,12 @@ def git_commit_push(filepath: Path, slug: str) -> None:
     run(["git", "add", str(filepath), str(TOPIC_LOG_PATH)], cwd=cwd)
     run(["git", "commit", "-m", f"draft: ブログ草案追加 {slug} ({today}) [auto]"], cwd=cwd)
 
-    # push（リトライ3回）
     for attempt in range(1, 4):
         try:
             run(["git", "push", "origin", "develop"], cwd=cwd)
-            print(f"[Step 6] git push 完了")
+            print("[Step 6] git push 完了")
             break
-        except RuntimeError as e:
+        except RuntimeError:
             if attempt == 3:
                 raise
             print(f"push retry {attempt}/3...")
@@ -253,7 +250,7 @@ def git_commit_push(filepath: Path, slug: str) -> None:
 # Step 7: money-mgt に L3 Issue 起票
 # ============================================================
 
-def create_issue(slug: str, title: str, description: str) -> None:
+def create_issue(slug: str, title: str) -> None:
     gh_token = os.environ.get("GH_TOKEN", "")
     today = date.today().isoformat()
     staging_url = f"{STAGING_URL}/blog/{slug}/"
@@ -264,7 +261,7 @@ def create_issue(slug: str, title: str, description: str) -> None:
 👉 **[ステージングで記事を確認する]({staging_url})**
 
 確認後、このIssueに以下のいずれかをコメントしてください：
-- `承認：公開` — ブランチをマージして本番へ
+- `承認：公開` — GitHub Actions の publish-blog-draft を実行
 - `修正：○○` — 修正内容を記載（エージェントが対応）
 - `保留` — 次回以降に持ち越し
 
@@ -283,7 +280,7 @@ def create_issue(slug: str, title: str, description: str) -> None:
 
 1. ステージング（[dev-hugo.money-mgt.net]({STAGING_URL})）で記事を確認
 2. `承認：公開` とコメント
-3. GitHub Actions の [publish-blog-draft]({staging_url}) ワークフローを slug `{slug}` で実行
+3. money-mgt-website の Actions → **publish-blog-draft** → slug `{slug}` で実行
 4. develop → main の PR をマージ → 本番反映
 
 ---
@@ -303,8 +300,7 @@ def create_issue(slug: str, title: str, description: str) -> None:
         timeout=30,
     )
     if resp.status_code == 201:
-        issue_url = resp.json().get("html_url", "")
-        print(f"[Step 7] Issue 起票完了: {issue_url}")
+        print(f"[Step 7] Issue 起票完了: {resp.json().get('html_url', '')}")
     else:
         print(f"[Step 7] Issue 起票失敗 ({resp.status_code}): {resp.text[:200]}")
 
@@ -325,7 +321,7 @@ def main():
     existing_titles = collect_existing_titles()
     print(f"  既存記事数: {len(existing_titles)}")
 
-    print("[Step 3] Claude API で草案生成...")
+    print("[Step 3] claude CLI で草案生成...")
     draft_data = generate_draft(pillar_key, existing_titles)
     print(f"  タイトル: {draft_data['title']}")
 
@@ -339,7 +335,7 @@ def main():
     git_commit_push(filepath, slug)
 
     print("[Step 7] money-mgt に L3 Issue 起票...")
-    create_issue(slug, draft_data["title"], draft_data["description"])
+    create_issue(slug, draft_data["title"])
 
     print("=== 完了 ===")
     print(f"  スラッグ   : {slug}")
