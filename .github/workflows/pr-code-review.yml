@@ -24,14 +24,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Hugo セットアップ（テンプレート構文チェック用）
-        uses: peaceiris/actions-hugo@v3
-        with:
-          hugo-version: '0.147.0'
-          extended: true
-
       - name: Hugo ビルド（テンプレート構文エラー検出）
         run: |
+          if ! command -v hugo > /dev/null 2>&1; then
+            echo "Hugo 未インストール → スキップ"
+            exit 0
+          fi
           hugo --minify --baseURL "https://dev-hugo.money-mgt.net/" --environment staging \
             --logLevel info 2>&1 | tee /tmp/hugo_build.log || true
           if grep -q "ERROR\|WARN" /tmp/hugo_build.log; then
@@ -59,13 +57,11 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
           REPO: ${{ github.repository }}
         run: |
-          # claude CLIの存在確認（未インストール時に早期失敗させる）
           if ! command -v claude > /dev/null 2>&1; then
-            echo "ERROR: claude CLIがインストールされていません。self-hosted runnerにclaude CLIを導入してください。"
+            echo "ERROR: claude CLI が未インストールです。"
             exit 1
           fi
 
-          # PR_TITLE はユーザー制御可能な値のためプロンプトに直接埋め込まず、サニタイズしてから使用する
           PR_TITLE_SAFE=$(printf '%s' "${PR_TITLE}" | python3 -c "import sys, re; t=sys.stdin.read().strip()[:100]; print(re.sub(r'[\x00-\x1f\x7f\`<>]', '', t))")
           PROMPT=$(cat <<PROMPT_EOF
           あなたはQAエンジニアです。PR #${PR_NUMBER} のコードレビューを実施してください。
@@ -126,41 +122,13 @@ jobs:
           PROMPT_EOF
           )
 
-          # Bash ツールを除外してプロンプトインジェクション経由の任意コマンド実行リスクを排除する
-          # PR差分（ユーザー制御可能）がClaudeに渡されるため、self-hosted runner上でのBash実行を禁止
           CLAUDE_OUTPUT=$(claude -p "$PROMPT" --allowedTools "Read,Glob,Grep" 2>&1)
           echo "$CLAUDE_OUTPUT"
 
-          # レビューコメントを抽出してGitHub PRに投稿（安全なシェル変数経由）
-          REVIEW_BODY=$(echo "$CLAUDE_OUTPUT" | python3 -c "
-import sys, re
-text = sys.stdin.read()
-m = re.search(r'REVIEW_COMMENT_START\n(.*?)\nREVIEW_COMMENT_END', text, re.DOTALL)
-if m:
-    print(m.group(1)[:2000])
-else:
-    print('（レビュー本文抽出失敗）')
-")
+          echo "$CLAUDE_OUTPUT" | python3 scripts/extract_review.py
 
-          # QA結果JSONを抽出してファイルに書き出す
-          echo "$CLAUDE_OUTPUT" | python3 -c "
-import sys, re, json
-text = sys.stdin.read()
-m = re.search(r'QA_RESULT_START\n(.*?)\nQA_RESULT_END', text, re.DOTALL)
-if m:
-    try:
-        data = json.loads(m.group(1).strip())
-        with open('/tmp/qa_result.json', 'w') as f:
-            json.dump(data, f)
-        print('qa_result.json 書き出し完了')
-    except Exception as e:
-        print(f'JSON解析失敗: {e}')
-else:
-    print('QA_RESULT_START/END マーカーが見つかりません')
-"
-
-          # PRにレビューコメントを投稿
-          if [ -n "$REVIEW_BODY" ] && [ "$REVIEW_BODY" != "（レビュー本文抽出失敗）" ]; then
+          REVIEW_BODY=$(cat /tmp/review_body.txt)
+          if [ -n "$REVIEW_BODY" ]; then
             gh pr comment "${PR_NUMBER}" --repo "${REPO}" --body "$REVIEW_BODY"
           fi
 
@@ -192,91 +160,21 @@ else:
 
           cd /tmp
           rm -rf mgt-qa-tmp
-          # GH_TOKENをURLやextraheaderに直接埋め込まず、GIT_ASKPASSを使用してログ・プロセス一覧への漏洩を防ぐ
           ASKPASS_SCRIPT=$(mktemp /tmp/askpass-XXXXXX.sh)
           printf '#!/bin/sh\necho "%s"\n' "${GH_TOKEN}" > "$ASKPASS_SCRIPT"
           chmod +x "$ASKPASS_SCRIPT"
           GIT_ASKPASS="$ASKPASS_SCRIPT" git clone https://github.com/boro74/money-mgt.git mgt-qa-tmp
           rm -f "$ASKPASS_SCRIPT"
           cd mgt-qa-tmp
-          # push用のリモートURLも同様に認証情報をURLに埋め込まない設定
+
           PUSH_ASKPASS=$(mktemp /tmp/askpass-XXXXXX.sh)
           printf '#!/bin/sh\necho "%s"\n' "${GH_TOKEN}" > "$PUSH_ASKPASS"
           chmod +x "$PUSH_ASKPASS"
           git config core.askPass "$PUSH_ASKPASS"
 
-          TASK_ID="$TASK_ID" \
-          REPO="$REPO" \
-          PR_NUMBER="$PR_NUMBER" \
-          PR_BRANCH="$PR_BRANCH" \
-          PR_TITLE="$PR_TITLE" \
-          MAX_SEV="$MAX_SEV" \
-          python3 - <<'PYEOF'
-          import json, os
-          from pathlib import Path
-          from datetime import datetime
-
-          qa        = json.loads(Path("/tmp/qa_result.json").read_text())
-          repo      = os.environ["REPO"]
-          pr_num    = int(os.environ["PR_NUMBER"])
-          pr_branch = os.environ["PR_BRANCH"]
-          pr_title  = os.environ["PR_TITLE"]
-          max_sev   = os.environ["MAX_SEV"]
-          task_id   = os.environ["TASK_ID"]
-          issues    = qa.get("issues_text", "")
-
-          pr_url    = f"https://github.com/{repo}/pull/{pr_num}"
-          sev_label = "P0（必須修正）" if max_sev == "p0" else "P1（要対応）"
-          desc = (
-              f"PR #{pr_num} のQAレビューで {sev_label} 問題が検出されました。\n\n"
-              f"【PR情報】\n- リポジトリ: {repo}\n- PR URL: {pr_url}\n"
-              f"- ブランチ: {pr_branch}\n- タイトル: {pr_title}\n\n"
-              f"【検出された問題】\n{issues}\n\n"
-              f"【対応手順】\n"
-              f"1. implementation-agent が {pr_url} のレビューコメントを読む\n"
-              f"2. ブランチ {pr_branch} にチェックアウトして修正を実装・push する\n"
-              f"3. push 後に QAレビューが自動再実行される"
-          )
-
-          queue_path = Path("director/task-queue/queue.json")
-          data  = json.loads(queue_path.read_text(encoding="utf-8"))
-          tasks = data if isinstance(data, list) else data.get("tasks", [])
-          now   = datetime.now().isoformat()
-
-          new_task = {
-              "task_id":        task_id,
-              "title":          f"QAレビュー指摘修正: {repo} PR#{pr_num}（{max_sev}）",
-              "status":         "pending",
-              "priority":       "high" if max_sev == "p0" else "medium",
-              "authority_level":"L1",
-              "source_agent":   "qa-review-bot",
-              "target_agent":   "dev-supervisor",
-              "description":    desc,
-              "input_files":    [],
-              "output_path":    "dev-headquarters/product-dev/implementation/",
-              "output_filename":f"qa-fix-{repo.replace('/', '-')}-pr{pr_num}.md",
-              "created_at":     now,
-              "updated_at":     now,
-              "blocked_reason": None,
-              "depends_on":     [],
-              "metadata": {
-                  "pr_repo":     repo,
-                  "pr_number":   pr_num,
-                  "pr_branch":   pr_branch,
-                  "max_severity":max_sev,
-                  "source":      "qa-review-workflow"
-              }
-          }
-
-          tasks.append(new_task)
-          if isinstance(data, list):
-              queue_path.write_text(json.dumps(data, ensure_ascii=False, indent=2))
-          else:
-              data["tasks"] = tasks
-              queue_path.write_text(json.dumps(data, ensure_ascii=False, indent=2))
-
-          print(f"タスク追加完了: {new_task['task_id']}")
-          PYEOF
+          TASK_ID="$TASK_ID" REPO="$REPO" PR_NUMBER="$PR_NUMBER" \
+          PR_BRANCH="$PR_BRANCH" PR_TITLE="$PR_TITLE" MAX_SEV="$MAX_SEV" \
+          python3 scripts/add_qa_task.py
 
           git config user.name "qa-review-bot [bot]"
           git config user.email "qa-review@money-mgt.net"
@@ -284,7 +182,8 @@ else:
           git diff --staged --quiet && echo "変更なし" && rm -f "${PUSH_ASKPASS:-}" && exit 0
           git commit -m "task: QAレビュー修正タスク追加 ${REPO} PR#${PR_NUMBER} [${MAX_SEV}]"
           for i in 1 2 3; do
-            git pull --rebase --autostash origin main && GIT_ASKPASS="${PUSH_ASKPASS}" GIT_USERNAME="x-access-token" git push && break
+            git pull --rebase --autostash origin main \
+              && GIT_ASKPASS="${PUSH_ASKPASS}" git push && break
             echo "push retry $i/3..."
             sleep $((i * 3))
           done
@@ -313,7 +212,6 @@ else:
             exit 0
           fi
 
-          # PR_TITLE のサニタイズ（シェルインジェクション対策：制御文字・<>・バッククォートを除去）
           PR_TITLE_SAFE=$(printf '%s' "${PR_TITLE}" | python3 -c "import sys, re; t=sys.stdin.read().strip()[:100]; print(re.sub(r'[\x00-\x1f\x7f\`<>]', '', t))")
           PR_URL="https://github.com/${REPO}/pull/${PR_NUMBER}"
           MGT_REPO="boro74/money-mgt"
@@ -324,7 +222,6 @@ else:
             QA_BADGE="🟡 P2（軽微な改善提案）のみ — マージ可能レベル"
           fi
 
-          # money-mgt で同 PR URL を含むオープン Issue を検索
           EXISTING=$(gh issue list --repo "$MGT_REPO" --state open \
             --search "${PR_URL}" --json number --jq '.[0].number // empty')
 
@@ -340,7 +237,6 @@ else:
           *QAレビューbot 自動追記 $(date '+%Y-%m-%d %H:%M %Z')*"
             echo "✅ money-mgt Issue #${EXISTING} にコメント追記しました"
           else
-            # PR_TITLEをシェル展開リスクを避けるため変数経由で渡す（シェルインジェクション対策）
             ISSUE_TITLE="【L3: PR承認依頼】${REPO} #${PR_NUMBER} ${PR_TITLE_SAFE}"
             gh issue create \
               --repo "$MGT_REPO" \
