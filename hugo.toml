@@ -41,7 +41,7 @@ buildExpired = false
 
   [[params.socialIcons]]
     name = "X"
-    url = "https://twitter.com/moneymt_fp"
+    url = "https://x.com/money_nabetani"
 
 [menu]
   [[menu.main]]
