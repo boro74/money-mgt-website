@@ -59,7 +59,7 @@ jobs:
           extended: true
 
       - name: Hugo ビルド（baseURL をステージング用に上書き・environment=staging）
-        run: hugo --minify --baseURL "https://dev-hugo.money-mgt.net/" --environment staging
+        run: hugo --minify --buildDrafts --baseURL "https://dev-hugo.money-mgt.net/" --environment staging
 
       - name: FTP デプロイ → LOLIPOP dev-hugo環境
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
