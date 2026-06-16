@@ -8,6 +8,7 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  MGT_REPO: boro74/money-mgt
 
 jobs:
   review:
@@ -163,7 +164,7 @@ jobs:
           ASKPASS_SCRIPT=$(mktemp /tmp/askpass-XXXXXX.sh)
           printf '#!/bin/sh\necho "%s"\n' "${GH_TOKEN}" > "$ASKPASS_SCRIPT"
           chmod +x "$ASKPASS_SCRIPT"
-          GIT_ASKPASS="$ASKPASS_SCRIPT" git clone https://github.com/boro74/money-mgt.git mgt-qa-tmp
+          GIT_ASKPASS="$ASKPASS_SCRIPT" git clone "https://github.com/${MGT_REPO}.git" mgt-qa-tmp
           rm -f "$ASKPASS_SCRIPT"
           cd mgt-qa-tmp
 
@@ -214,7 +215,7 @@ jobs:
 
           PR_TITLE_SAFE=$(printf '%s' "${PR_TITLE}" | python3 -c "import sys, re; t=sys.stdin.read().strip()[:100]; print(re.sub(r'[\x00-\x1f\x7f\`<>]', '', t))")
           PR_URL="https://github.com/${REPO}/pull/${PR_NUMBER}"
-          MGT_REPO="boro74/money-mgt"
+          MGT_REPO="${MGT_REPO:-boro74/money-mgt}"
 
           if [ "$MAX_SEV" = "ok" ]; then
             QA_BADGE="✅ QA全項目クリア（P0/P1/P2 なし）"
