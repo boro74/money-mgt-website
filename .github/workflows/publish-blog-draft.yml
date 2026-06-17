@@ -28,7 +28,13 @@ jobs:
       - name: 対象ファイル確認
         id: check
         run: |
-          FILE="content/blog/${{ inputs.slug }}.md"
+          SLUG="${{ inputs.slug }}"
+          # slug バリデーション（パストラバーサル・コマンドインジェクション対策）
+          if ! printf '%s' "$SLUG" | grep -qE '^[a-zA-Z0-9][a-zA-Z0-9_-]*$'; then
+            echo "ERROR: slug に無効な文字が含まれています（英数字・ハイフン・アンダースコアのみ許可）: ${SLUG}"
+            exit 1
+          fi
+          FILE="content/blog/${SLUG}.md"
           if [ ! -f "$FILE" ]; then
             echo "ERROR: ファイルが見つかりません: $FILE"
             exit 1
@@ -39,12 +45,14 @@ jobs:
           else
             echo "already_published=false" >> $GITHUB_OUTPUT
           fi
+          echo "slug=${SLUG}" >> $GITHUB_OUTPUT
           echo "file=$FILE" >> $GITHUB_OUTPUT
 
       - name: draft:true を削除してコミット
         if: steps.check.outputs.already_published == 'false'
         run: |
           FILE="${{ steps.check.outputs.file }}"
+          SLUG="${{ steps.check.outputs.slug }}"
 
           # draft: true の行を削除
           sed -i '/^draft: true$/d' "$FILE"
@@ -52,7 +60,8 @@ jobs:
           git config user.name "publish-blog-bot"
           git config user.email "bot@money-mgt.net"
           git add "$FILE"
-          git commit -m "publish: ブログ公開 ${{ inputs.slug }} [manual-publish]"
+          # コマンドインジェクション対策: バリデーション済みのstep output変数を使用
+          git commit -m "publish: ブログ公開 ${SLUG} [manual-publish]"
           git push origin develop
 
           echo "✅ 公開完了: $FILE"
@@ -60,9 +69,12 @@ jobs:
 
       - name: topic-log の draft フラグを更新
         if: steps.check.outputs.already_published == 'false'
+        env:
+          # Pythonインライン内でのinputs.slug直接展開を避け環境変数経由で渡す（インジェクション対策）
+          VALIDATED_SLUG: ${{ steps.check.outputs.slug }}
         run: |
           python3 - << 'PYEOF'
-          import json
+          import json, os
           from pathlib import Path
 
           log_path = Path("data/hugo-blog-topic-log.json")
@@ -71,7 +83,7 @@ jobs:
               exit(0)
 
           log = json.loads(log_path.read_text(encoding="utf-8"))
-          slug = "${{ inputs.slug }}"
+          slug = os.environ["VALIDATED_SLUG"]  # 環境変数から読み込み（バリデーション済み）
           updated = False
           for post in log.get("posts", []):
               if post.get("slug") == slug:

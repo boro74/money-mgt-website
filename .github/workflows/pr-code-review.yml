@@ -14,6 +14,8 @@ jobs:
   review:
     runs-on: self-hosted
     timeout-minutes: 30
+    # フォークPRはself-hostedランナーのコード実行リスクがあるためスキップ
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.id == github.event.repository.id
     permissions:
       contents: read
       issues: write
@@ -147,7 +149,15 @@ jobs:
             exit 0
           fi
 
-          MAX_SEV=$(python3 -c "import json; d=json.load(open('/tmp/qa_result.json')); print(d.get('max_severity','ok'))")
+          MAX_SEV=$(python3 -c "
+import json, sys
+try:
+    d = json.load(open('/tmp/qa_result.json'))
+    print(d.get('max_severity', 'ok'))
+except (json.JSONDecodeError, OSError) as e:
+    print(f'qa_result.json parse error: {e}', file=sys.stderr)
+    print('ok')
+")
           echo "最大重要度: ${MAX_SEV}"
 
           if [ "$MAX_SEV" != "p0" ] && [ "$MAX_SEV" != "p1" ]; then
@@ -161,9 +171,12 @@ jobs:
 
           cd /tmp
           rm -rf mgt-qa-tmp
-          git clone "https://x-access-token:${GH_TOKEN}@github.com/${MGT_REPO}.git" mgt-qa-tmp
+          # トークンをURLに直接埋め込まず credential.helper 経由で渡す（ログ露出防止）
+          git -c credential.helper='!f() { test "$1" = get && printf "username=x-access-token\npassword=%s\n" "${GH_TOKEN}"; }; f' \
+            clone "https://github.com/${MGT_REPO}.git" mgt-qa-tmp
           cd mgt-qa-tmp
-          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${MGT_REPO}.git"
+          git remote set-url origin "https://github.com/${MGT_REPO}.git"
+          git config credential.helper '!f() { test "$1" = get && printf "username=x-access-token\npassword=%s\n" "${GH_TOKEN}"; }; f'
 
           TASK_ID="$TASK_ID" REPO="$REPO" PR_NUMBER="$PR_NUMBER" \
           PR_BRANCH="$PR_BRANCH" PR_TITLE="$PR_TITLE" MAX_SEV="$MAX_SEV" \
@@ -196,7 +209,15 @@ jobs:
             exit 0
           fi
 
-          MAX_SEV=$(python3 -c "import json; d=json.load(open('/tmp/qa_result.json')); print(d.get('max_severity','ok'))")
+          MAX_SEV=$(python3 -c "
+import json, sys
+try:
+    d = json.load(open('/tmp/qa_result.json'))
+    print(d.get('max_severity', 'ok'))
+except (json.JSONDecodeError, OSError) as e:
+    print(f'qa_result.json parse error: {e}', file=sys.stderr)
+    print('ok')
+")
 
           if [ "$MAX_SEV" = "p0" ] || [ "$MAX_SEV" = "p1" ]; then
             echo "P0/P1あり → 承認依頼スキップ（修正タスク作成済み）"
