@@ -150,14 +150,14 @@ jobs:
           fi
 
           MAX_SEV=$(python3 -c "
-import json, sys
-try:
-    d = json.load(open('/tmp/qa_result.json'))
-    print(d.get('max_severity', 'ok'))
-except (json.JSONDecodeError, OSError) as e:
-    print(f'qa_result.json parse error: {e}', file=sys.stderr)
-    print('ok')
-")
+          import json, sys
+          try:
+              d = json.load(open('/tmp/qa_result.json'))
+              print(d.get('max_severity', 'ok'))
+          except (json.JSONDecodeError, OSError) as e:
+              print(f'qa_result.json parse error: {e}', file=sys.stderr)
+              print('ok')
+          ")
           echo "最大重要度: ${MAX_SEV}"
 
           if [ "$MAX_SEV" != "p0" ] && [ "$MAX_SEV" != "p1" ]; then
@@ -210,14 +210,14 @@ except (json.JSONDecodeError, OSError) as e:
           fi
 
           MAX_SEV=$(python3 -c "
-import json, sys
-try:
-    d = json.load(open('/tmp/qa_result.json'))
-    print(d.get('max_severity', 'ok'))
-except (json.JSONDecodeError, OSError) as e:
-    print(f'qa_result.json parse error: {e}', file=sys.stderr)
-    print('ok')
-")
+          import json, sys
+          try:
+              d = json.load(open('/tmp/qa_result.json'))
+              print(d.get('max_severity', 'ok'))
+          except (json.JSONDecodeError, OSError) as e:
+              print(f'qa_result.json parse error: {e}', file=sys.stderr)
+              print('ok')
+          ")
 
           if [ "$MAX_SEV" = "p0" ] || [ "$MAX_SEV" = "p1" ]; then
             echo "P0/P1あり → 承認依頼スキップ（修正タスク作成済み）"
