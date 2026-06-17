@@ -1,4 +1,4 @@
-name: ブログ下書きを公開（draft: true 削除）
+name: "ブログ下書きを公開（draft: true 削除）"
 
 on:
   workflow_dispatch:
