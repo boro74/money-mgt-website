@@ -263,7 +263,7 @@ jobs:
 
           | 項目 | 内容 |
           |------|------|
-          | PR | [#${PR_NUMBER}: ${PR_TITLE}](${PR_URL}) |
+          | PR | [#${PR_NUMBER}: ${PR_TITLE_SAFE}](${PR_URL}) |
           | QA判定 | ${QA_BADGE} |
           | ブランチ | \`${PR_HEAD_BRANCH}\` → \`${PR_BASE_BRANCH}\` |
 

@@ -44,20 +44,18 @@ body, .post-content, .entry-content {
   --mm-radius-lg:      20px;
 }
 
-/* ダークモード */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --mm-text:         #f1f5f9;
-    --mm-text-muted:   #94a3b8;
-    --mm-bg-soft:      #0f172a;
-    --mm-bg-card:      #1e293b;
-    --mm-border:       #334155;
-    --mm-border-light: #1e293b;
-    --mm-shadow:       0 4px 16px rgba(0,0,0,0.40);
-    --mm-shadow-lg:    0 10px 40px rgba(0,0,0,0.50);
-    --mm-shadow-hover: 0 12px 48px rgba(0,0,0,0.60);
-    --mm-primary-light:#1e3a5f;
-  }
+/* ダークモード (PaperMod auto テーマに合わせ [data-theme="dark"] で統一) */
+[data-theme="dark"] {
+  --mm-text:         #f1f5f9;
+  --mm-text-muted:   #94a3b8;
+  --mm-bg-soft:      #0f172a;
+  --mm-bg-card:      #1e293b;
+  --mm-border:       #334155;
+  --mm-border-light: #1e293b;
+  --mm-shadow:       0 4px 16px rgba(0,0,0,0.40);
+  --mm-shadow-lg:    0 10px 40px rgba(0,0,0,0.50);
+  --mm-shadow-hover: 0 12px 48px rgba(0,0,0,0.60);
+  --mm-primary-light:#1e3a5f;
 }
 
 /* ---------- ナビゲーションバー ---------- */
@@ -72,11 +70,9 @@ body, .post-content, .entry-content {
   z-index: 100;
 }
 
-@media (prefers-color-scheme: dark) {
-  .header {
-    background: rgba(15, 23, 42, 0.95);
-    border-bottom-color: var(--mm-border);
-  }
+[data-theme="dark"] .header {
+  background: rgba(15, 23, 42, 0.95);
+  border-bottom-color: var(--mm-border);
 }
 
 .header-nav {
