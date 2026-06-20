@@ -47,7 +47,12 @@ body, .post-content, .entry-content {
   --mm-radius-lg:      20px;
 }
 
-/* ダークモード (PaperMod auto テーマに合わせ [data-theme="dark"] で統一) */
+/* ダークモード
+ * PaperMod は defaultTheme: auto の場合、OS設定に応じて <html data-theme="dark"> を付与する。
+ * PaperMod の themes/PaperMod/assets/css/core/theme-vars.css と同じ [data-theme="dark"] セレクタを使用
+ * することで、カスタム変数をPaperMod組み込みの切り替えロジックと整合させている。
+ * 参考: https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#using-hugos-syntax-highlighter-chroma
+ */
 [data-theme="dark"] {
   --mm-text:         #f1f5f9;
   --mm-text-muted:   #94a3b8;

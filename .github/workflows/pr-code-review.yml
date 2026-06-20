@@ -42,6 +42,18 @@ jobs:
             echo "Hugo ビルド: テンプレート構文エラーなし"
           fi
 
+      - name: 依存スクリプトの存在確認
+        # このワークフローが参照するスクリプトが money-mgt-website/scripts/ に存在することを確認する
+        # add_qa_task.py は money-mgt (MGT_REPO) 側の scripts/ に存在するため、ここでは確認しない
+        run: |
+          for script in scripts/filter_diff.py scripts/extract_review.py; do
+            if [ ! -f "$script" ]; then
+              echo "❌ 必須スクリプトが見つかりません: $script"
+              exit 1
+            fi
+            echo "✅ $script"
+          done
+
       - name: PR差分を取得（コンテンツファイル除外・コードファイル優先）
         env:
           GH_TOKEN: ${{ github.token }}

@@ -59,6 +59,8 @@ jobs:
           extended: true
 
       - name: Hugo ビルド（baseURL をステージング用に上書き・environment=staging）
+        # --buildDrafts: ステージング環境では下書き記事も含めてプレビューするため意図的に有効化
+        # 本番（deploy-production.yml）では --buildDrafts を使用しないため下書きは本番公開されない
         run: hugo --minify --buildDrafts --baseURL "https://dev-hugo.money-mgt.net/" --environment staging
 
       - name: FTP デプロイ → LOLIPOP dev-hugo環境
