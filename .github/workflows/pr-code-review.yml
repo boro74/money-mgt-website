@@ -44,9 +44,9 @@ jobs:
 
       - name: 依存スクリプトの存在確認
         # このワークフローが参照するスクリプトが money-mgt-website/scripts/ に存在することを確認する
-        # add_qa_task.py は money-mgt (MGT_REPO) 側の scripts/ に存在するため、ここでは確認しない
+        # add_qa_task.py は本リポジトリにベンダリング済み（外部リポジトリの未レビューコード実行を回避するため）
         run: |
-          for script in scripts/filter_diff.py scripts/extract_review.py; do
+          for script in scripts/filter_diff.py scripts/extract_review.py scripts/add_qa_task.py; do
             if [ ! -f "$script" ]; then
               echo "❌ 必須スクリプトが見つかりません: $script"
               exit 1
@@ -190,9 +190,11 @@ jobs:
           git remote set-url origin "https://github.com/${MGT_REPO}.git"
           git config credential.helper '!f() { test "$1" = get && printf "username=x-access-token\npassword=%s\n" "${GH_TOKEN}"; }; f'
 
+          # add_qa_task.py は本リポジトリ（money-mgt-website）にベンダリング済みのものを使う。
+          # boro74/money-mgt 側のスクリプトはこのPRのレビュー対象外で内容を検証できないため実行しない。
           TASK_ID="$TASK_ID" REPO="$REPO" PR_NUMBER="$PR_NUMBER" \
           PR_BRANCH="$PR_BRANCH" PR_TITLE="$PR_TITLE" MAX_SEV="$MAX_SEV" \
-          python3 scripts/add_qa_task.py
+          python3 "${GITHUB_WORKSPACE}/scripts/add_qa_task.py"
 
           git config user.name "qa-review-bot [bot]"
           git config user.email "qa-review@money-mgt.net"
@@ -236,7 +238,7 @@ jobs:
             exit 0
           fi
 
-          PR_TITLE_SAFE=$(printf '%s' "${PR_TITLE}" | python3 -c "import sys, re; t=sys.stdin.read().strip()[:100]; print(re.sub(r'[\x00-\x1f\x7f\`<>]', '', t))")
+          PR_TITLE_SAFE=$(printf '%s' "${PR_TITLE}" | python3 -c "import sys, re; t=sys.stdin.read().strip()[:100]; print(re.sub(r'[^\w \-\.\(\)\[\]（）【】＿ぁ-ん一-龥ァ-ン]', '', t))")
           PR_URL="https://github.com/${REPO}/pull/${PR_NUMBER}"
           MGT_REPO="${MGT_REPO:-boro74/money-mgt}"
 
