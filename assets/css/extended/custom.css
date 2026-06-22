@@ -141,15 +141,15 @@ body, .post-content, .entry-content {
   font-weight: 700;
 }
 
-/* お問い合わせをCTAボタン風に */
-#menu li:last-child a {
+/* お問い合わせをCTAボタン風に（メニュー順序に依存しないようURLで指定） */
+#menu a[href*="/contact/"] {
   background: var(--mm-primary);
   color: #fff !important;
   font-weight: 700;
   padding: 0.45em 1em;
 }
 
-#menu li:last-child a:hover {
+#menu a[href*="/contact/"]:hover {
   background: var(--mm-primary-dark);
   color: #fff !important;
 }
@@ -570,7 +570,7 @@ body, .post-content, .entry-content {
     padding: 0.35em 0.5em;
   }
 
-  #menu li:last-child a {
+  #menu a[href*="/contact/"] {
     padding: 0.35em 0.65em;
   }
 }
