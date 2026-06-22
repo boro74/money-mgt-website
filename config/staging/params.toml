@@ -1,1 +1,7 @@
 appURL = "https://dev-fp.money-mgt.net"
+
+# テーマ(PaperMod)のrobots.txt/meta robotsはsite.Params.env=="production"を
+# 条件にindex許可・noindex判定を行っているため、staging環境では明示的に上書きする。
+# 未設定だとconfig/_default/hugo.tomlのenv="production"を継承し、
+# --buildDraftsで生成した下書き記事がstagingでも検索エンジンにインデックスされてしまう。
+env = "staging"
