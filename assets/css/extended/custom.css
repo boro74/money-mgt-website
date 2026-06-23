@@ -62,6 +62,15 @@ body, .post-content, .entry-content {
   --mm-shadow-lg:    0 10px 40px rgba(0,0,0,0.50);
   --mm-shadow-hover: 0 12px 48px rgba(0,0,0,0.60);
   --mm-primary-light:#1e3a5f;
+
+  /* PaperModテーマ変数オーバーライド（ダークモード対応）
+   * :root側の --theme/--entry は #ffffff 固定のままだと、--content（文字色）は
+   * --mm-text経由でダークモード用の明色に切り替わるため、白背景に白文字相当となり
+   * 本文が視認不能になる。ダークモード時は背景側も明示的に切り替える。 */
+  --theme:    var(--mm-bg-soft);
+  --entry:    var(--mm-bg-card);
+  --tertiary: var(--mm-bg-card);
+  --code-bg:  var(--mm-bg-card);
 }
 
 /* ---------- ナビゲーションバー ---------- */
