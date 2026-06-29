@@ -1,0 +1,110 @@
+name: "ブログ下書きを公開（draft: true 削除）"
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: '公開する記事の slug（例: nisa-reform-2026）'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    name: draft:true 削除 → develop push
+    runs-on: self-hosted
+    timeout-minutes: 10
+
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: 対象ファイル確認
+        id: check
+        run: |
+          SLUG="${{ inputs.slug }}"
+          # slug バリデーション（パストラバーサル・コマンドインジェクション対策）
+          if ! printf '%s' "$SLUG" | grep -qE '^[a-zA-Z0-9][a-zA-Z0-9_-]*$'; then
+            echo "ERROR: slug に無効な文字が含まれています（英数字・ハイフン・アンダースコアのみ許可）: ${SLUG}"
+            exit 1
+          fi
+          FILE="content/blog/${SLUG}.md"
+          if [ ! -f "$FILE" ]; then
+            echo "ERROR: ファイルが見つかりません: $FILE"
+            exit 1
+          fi
+          if ! grep -q "^draft: true" "$FILE"; then
+            echo "INFO: draft: true が存在しません。すでに公開済みの可能性があります。"
+            echo "already_published=true" >> $GITHUB_OUTPUT
+          else
+            echo "already_published=false" >> $GITHUB_OUTPUT
+          fi
+          echo "slug=${SLUG}" >> $GITHUB_OUTPUT
+          echo "file=$FILE" >> $GITHUB_OUTPUT
+
+      - name: draft:true を削除してコミット
+        if: steps.check.outputs.already_published == 'false'
+        run: |
+          FILE="${{ steps.check.outputs.file }}"
+          SLUG="${{ steps.check.outputs.slug }}"
+
+          # draft: true の行を削除
+          sed -i '/^draft: true$/d' "$FILE"
+
+          git config user.name "publish-blog-bot"
+          git config user.email "bot@money-mgt.net"
+          git add "$FILE"
+          # コマンドインジェクション対策: バリデーション済みのstep output変数を使用
+          git commit -m "publish: ブログ公開 ${SLUG} [manual-publish]"
+          git push origin develop
+
+          echo "✅ 公開完了: $FILE"
+          echo "次のステップ: develop → main の PR をマージして本番反映してください"
+
+      - name: topic-log の draft フラグを更新
+        if: steps.check.outputs.already_published == 'false'
+        env:
+          # Pythonインライン内でのinputs.slug直接展開を避け環境変数経由で渡す（インジェクション対策）
+          VALIDATED_SLUG: ${{ steps.check.outputs.slug }}
+        run: |
+          python3 - << 'PYEOF'
+          import json, os
+          from pathlib import Path
+
+          log_path = Path("data/hugo-blog-topic-log.json")
+          if not log_path.exists():
+              print("topic-log が存在しないためスキップ")
+              exit(0)
+
+          log = json.loads(log_path.read_text(encoding="utf-8"))
+          slug = os.environ["VALIDATED_SLUG"]  # 環境変数から読み込み（バリデーション済み）
+          updated = False
+          for post in log.get("posts", []):
+              if post.get("slug") == slug:
+                  post["draft"] = False
+                  updated = True
+                  break
+
+          if updated:
+              log_path.write_text(json.dumps(log, ensure_ascii=False, indent=2), encoding="utf-8")
+              import subprocess
+              subprocess.run(["git", "add", str(log_path)], check=True)
+              result = subprocess.run(["git", "diff", "--staged", "--quiet"])
+              if result.returncode != 0:
+                  subprocess.run(["git", "commit", "-m", f"chore: topic-log {slug} draft→false"], check=True)
+                  subprocess.run(["git", "push", "origin", "develop"], check=True)
+              print(f"topic-log 更新完了: {slug}")
+          else:
+              print(f"topic-log に slug '{slug}' が見つかりませんでした")
+          PYEOF
+
+      - name: すでに公開済みの場合の通知
+        if: steps.check.outputs.already_published == 'true'
+        run: |
+          echo "INFO: ${{ inputs.slug }} はすでに公開状態です（draft: true が存在しません）"

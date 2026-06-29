@@ -7,6 +7,8 @@ enableRobotsTXT = true
 buildDrafts = false
 buildFuture = false
 buildExpired = false
+[pagination]
+  pagerSize = 12
 
 [params]
   env = "production"
@@ -24,16 +26,22 @@ buildExpired = false
   disableScrollToTop = false
   disableThemeToggle = true
 
+  [params.cover]
+    hidden = false
+    hiddenInList = false
+    hiddenInSingle = false
+
+  [params.label]
+    text = "マネーマネジメント"
+    icon = "images/logo.png"
+    iconHeight = 40
+
   [params.homeInfoParams]
     Title = "FPの仕事を、もっと自分らしく。"
-    Content = """
-AI提案書生成・議事録自動化・顧客セルフ入力。
-独立FPが「相談に集中する時間」を取り戻すSaaSツール。
-"""
 
   [[params.socialIcons]]
     name = "X"
-    url = "https://twitter.com/moneymt_fp"
+    url = "https://x.com/money_nabetani"
 
 [menu]
   [[menu.main]]
@@ -48,19 +56,23 @@ AI提案書生成・議事録自動化・顧客セルフ入力。
     weight = 20
   [[menu.main]]
     identifier = "junior-emp"
-    name = "就職・副業支援"
+    name = "副業・独立支援"
     url = "/junior-emp/"
     weight = 30
   [[menu.main]]
     identifier = "blog"
     name = "ブログ"
-    url = "https://www.money-mgt.net/blog/"
+    url = "/blog/"
     weight = 40
   [[menu.main]]
     identifier = "contact"
     name = "お問い合わせ"
     url = "/contact/"
     weight = 50
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]
