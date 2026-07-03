@@ -13,7 +13,7 @@ jobs:
   deploy:
     name: Hugo ビルド → FTP デプロイ（本番）
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 60
 
     steps:
       - name: リポジトリをチェックアウト（サブモジュール含む）
@@ -69,7 +69,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
-          protocol: ftp
+          protocol: ftps
           local-dir: ./public/
           server-dir: ${{ secrets.FTP_SERVER_DIR }}
           exclude: |
