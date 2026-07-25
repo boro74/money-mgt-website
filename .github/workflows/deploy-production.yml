@@ -63,12 +63,15 @@ jobs:
         run: hugo --minify
 
       - name: FTP デプロイ → LOLIPOP hugo/
-        # セキュリティ注記（QA P1 対応・2026-07-04）:
-        #   protocol: ftp（平文）を使用しているため、FTP_USERNAME・FTP_PASSWORD が非暗号化で送信される。
-        #   LOLIPOP が FTPS に対応していないため緊急対応として許容（PR #14 / QA P1）。
-        #   Hugo 静的ファイル（公開コンテンツのみ）の転送かつ GitHub Actions 送信元 IP が限定される
-        #   環境のため実害リスクは限定的。中長期的には SFTP または LOLIPOP の FTPS 対応を確認し
-        #   protocol: sftp または ftps に移行すること（TODO: LOLIPOP サポートへ SFTP 可否を確認）。
+        # セキュリティ注記（QA P1 対応・2026-07-04、2026-07-25記述修正）:
+        #   protocol: ftp（平文）を使用しているため、FTP_USERNAME・FTP_PASSWORD・転送内容が
+        #   非暗号化で送信される。LOLIPOP が FTPS に対応していないため緊急対応として許容
+        #   （PR #14 / QA P1）。GitHub Actions のホスト型ランナーは送信元IPが固定・限定されず、
+        #   IPアドレスの性質は盗聴リスクの軽減根拠にならない（2026-07-25 QA P2指摘を受け誤記を修正）。
+        #   転送対象がHugo静的ファイル（公開済みコンテンツのみ）であることが唯一の限定要因であり、
+        #   認証情報（FTP_USERNAME・FTP_PASSWORD）自体は経路上で平文露出するリスクが残る。
+        #   中長期的には SFTP または LOLIPOP の FTPS 対応を確認し protocol: sftp または ftps へ
+        #   移行すること（TODO: LOLIPOP サポートへ SFTP 可否を確認。トラッキング: Issue #16）。
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
