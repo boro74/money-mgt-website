@@ -119,6 +119,49 @@ url: "/fp-myportal/"
 
 ---
 
+## 「AIが情報を整理してくれる」ツールは増えました。でも、それだけで提案は完結しません。
+
+<div class="feature-cards fade-in">
+  <div class="feature-card">
+    <div class="feature-card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="3 17 9 11 13 15 21 7"/>
+        <polyline points="14 7 21 7 21 14"/>
+      </svg>
+    </div>
+    <p class="feature-title">退職シナリオ特化のシミュレーション精度</p>
+    <p class="feature-body">退職金・iDeCo・公的年金が絡む受取シナリオを、税負担まで含めて自動計算。「一時金で受け取るか・年金で受け取るか」の税額比較を、お客様の目の前で見せながら説明できます。</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/>
+        <rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="14" y="14" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/>
+      </svg>
+    </div>
+    <p class="feature-title">顧客管理（CRM）と完全統合</p>
+    <p class="feature-body">シミュレーション結果・面談議事録・提案書は、入力した瞬間に同じ顧客カルテへ反映。「提案ツールは提案ツール、顧客管理は別ツール」という二重入力・情報の分断が起きません。</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 4 23 10 17 10"/>
+        <polyline points="1 20 1 14 7 14"/>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+      </svg>
+    </div>
+    <p class="feature-title">法改正への即時対応</p>
+    <p class="feature-body">2026年12月のiDeCo大改正（掛金上限引き上げ）、2027年1月開始のこどもNISAなど、制度変更のたびにシミュレーション設定を更新。古い制度のまま提案してしまうリスクを防ぎます。</p>
+  </div>
+</div>
+
+---
+
 ## 料金プラン
 
 <div class="pricing-card fade-in">
