@@ -11,6 +11,11 @@ tags:
   - "iDeCo改正"
   - "老後資金"
   - "節税"
+cover:
+  image: "/images/eyecatch/default.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 **2026年12月、iDeCo（個人型確定拠出年金）が大きく変わります。**

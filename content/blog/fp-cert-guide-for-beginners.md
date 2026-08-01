@@ -9,6 +9,11 @@ tags:
   - "FP相談"
   - "FP資格"
   - "ファイナンシャルプランナー"
+cover:
+  image: "/images/eyecatch/default.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 2026年7月8日、ちょっとしたニュースが業界に流れました。

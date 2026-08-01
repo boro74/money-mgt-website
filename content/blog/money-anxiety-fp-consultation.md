@@ -9,6 +9,11 @@ tags:
   - "FP相談"
   - "お金の不安"
   - "家計相談"
+cover:
+  image: "/images/eyecatch/default.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 ## 「お金のことが頭から離れない」——あなただけじゃないです

@@ -10,6 +10,11 @@ tags:
   - "こどもNISA"
   - "NISA"
   - "教育資金"
+cover:
+  image: "/images/eyecatch/default.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 「こどもNISA、はじまるって聞いたけど、ジュニアNISAとは違うの？」

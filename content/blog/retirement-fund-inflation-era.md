@@ -10,6 +10,11 @@ tags:
   - "老後資金"
   - "インフレ"
   - "FP相談"
+cover:
+  image: "/images/eyecatch/default.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 「老後2,000万円問題って、あれ解決したの？　それとも、もっと必要になってるの？」

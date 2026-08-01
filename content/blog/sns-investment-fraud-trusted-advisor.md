@@ -9,6 +9,11 @@ tags:
   - "投資詐欺"
   - "SNS詐欺"
   - "FP相談"
+cover:
+  image: "/images/eyecatch/default.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 ## はじめに：あなたの周りにも届いていませんか？

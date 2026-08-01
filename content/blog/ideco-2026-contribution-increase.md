@@ -10,6 +10,11 @@ tags:
   - "iDeCo"
   - "iDeCo改正"
   - "節税"
+cover:
+  image: "/images/eyecatch/default.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 ## この記事を読んでほしい人

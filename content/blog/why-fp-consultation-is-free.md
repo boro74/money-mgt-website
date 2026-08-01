@@ -9,6 +9,11 @@ tags:
   - "FP相談"
   - "独立系FP"
   - "相談料"
+cover:
+  image: "/images/eyecatch/default.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 「FP相談って、なんで無料なの？　なにか裏があるんじゃ……」

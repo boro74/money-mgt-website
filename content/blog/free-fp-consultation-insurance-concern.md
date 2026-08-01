@@ -10,6 +10,11 @@ tags:
   - "FP相談"
   - "保険見直し"
   - "独立系FP"
+cover:
+  image: "/images/eyecatch/default.svg"
+  alt: ""
+  hidden: false
+  hiddenInList: false
 ---
 
 「無料のFP相談に行ったら、こちらの話をあまり聞いてもらえないまま、気づけば保険の説明が長々と続いていた」
