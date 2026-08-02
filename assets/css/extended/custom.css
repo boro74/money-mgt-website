@@ -1251,3 +1251,89 @@ body, .post-content, .entry-content {
   .blog-posts-grid.list-view .entry-cover { width: 90px; }
   .blog-posts-grid.list-view .entry-cover img { height: 70px !important; }
 }
+
+/* =====================================================
+   トップページ 動き・インタラクション強化
+   （2026-08-02 デザイン刷新: dev-headquarters/product-dev/design/2026-08-02_money-mgt-website-design-refresh.md）
+   ===================================================== */
+
+/* アンカーリンクのスムーズスクロール */
+html { scroll-behavior: smooth; }
+
+/* セクション見出しのアイキャッチラベル（横線＋英字ラベル） */
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--mm-accent-dark);
+  margin: 0 0 0.4rem;
+}
+.section-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 2px;
+  background: var(--mm-accent);
+  flex-shrink: 0;
+}
+[data-theme="dark"] .section-eyebrow { color: var(--mm-accent); }
+
+/* カードグリッドのスクロールイン: コンテナ一括ではなく各カードをずらしてフェードインさせる
+   （.fade-in自体の基本挙動は.about-summary等の単一ブロックのため維持し、グリッドのみ上書き） */
+.feature-cards.fade-in,
+.service-cards.fade-in {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+.feature-cards .feature-card,
+.service-cards .service-card {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.feature-cards.visible .feature-card,
+.service-cards.visible .service-card {
+  opacity: 1;
+  transform: none;
+}
+.feature-cards .feature-card:nth-child(1),
+.service-cards .service-card:nth-child(1) { transition-delay: 0s; }
+.feature-cards .feature-card:nth-child(2),
+.service-cards .service-card:nth-child(2) { transition-delay: 0.09s; }
+.feature-cards .feature-card:nth-child(3),
+.service-cards .service-card:nth-child(3) { transition-delay: 0.18s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .feature-cards .feature-card,
+  .service-cards .service-card { opacity: 1; transform: none; transition: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* 旗艦プロダクトセクション: 数値訴求のカウントアップ表示 */
+.flagship-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem 2.5rem;
+  margin: 1.5rem 0;
+}
+.flagship-stat {
+  text-align: left;
+}
+.flagship-stat-num {
+  display: block;
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--mm-primary);
+  line-height: 1.15;
+}
+.flagship-stat-label {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--mm-text-muted);
+  margin-top: 0.15rem;
+}
