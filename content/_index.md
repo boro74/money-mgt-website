@@ -121,15 +121,15 @@ description: "独立FP・FP団体・FP志望者向けのAIツールと業務シ�
 
 <div class="flagship-stats">
   <div class="flagship-stat">
-    <span class="flagship-stat-num"><span class="count-up" data-target="30">0</span>分 → <span class="count-up" data-target="3">0</span>分</span>
+    <span class="flagship-stat-num"><span class="count-up" data-target="30">30</span>分 → <span class="count-up" data-target="3">3</span>分</span>
     <span class="flagship-stat-label">提案書作成にかかる時間</span>
   </div>
   <div class="flagship-stat">
-    <span class="flagship-stat-num">最大<span class="count-up" data-target="40">0</span>%削減</span>
+    <span class="flagship-stat-num">最大<span class="count-up" data-target="40">40</span>%削減</span>
     <span class="flagship-stat-label">業務時間</span>
   </div>
   <div class="flagship-stat">
-    <span class="flagship-stat-num">¥<span class="count-up" data-target="3300" data-format="comma">0</span></span>
+    <span class="flagship-stat-num">¥<span class="count-up" data-target="3300" data-format="comma">3,300</span></span>
     <span class="flagship-stat-label">月額（税込）</span>
   </div>
 </div>
