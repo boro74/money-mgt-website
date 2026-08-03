@@ -12,6 +12,8 @@ description: "独立FP・FP団体・FP志望者向けのAIツールと業務シ�
 
 ---
 
+<p class="section-eyebrow">OUR FIELDS</p>
+
 ## マネーマネジメントが担う、3つの領域
 
 <div class="feature-cards fade-in">
@@ -53,6 +55,8 @@ description: "独立FP・FP団体・FP志望者向けのAIツールと業務シ�
 </div>
 
 ---
+
+<p class="section-eyebrow">SERVICE</p>
 
 ## サービス {#services}
 
@@ -107,13 +111,28 @@ description: "独立FP・FP団体・FP志望者向けのAIツールと業務シ�
 
 ---
 
+<p class="section-eyebrow">FLAGSHIP</p>
+
 ## 旗艦プロダクト：FPマイポータル
 
 <div class="about-summary fade-in">
 
 独立FP専用の AI業務アシスタント。顧客情報を入力するだけで提案書の草案を **3分で生成**。面談後の議事録自動化・顧客セルフ入力フォームも搭載し、繰り返しの事務作業をまるごとAIが肩代わりします。
 
-**提案書作成 30分 → 3分 ／ 業務時間 最大40%削減 ／ 月額¥3,300（税込）**
+<div class="flagship-stats">
+  <div class="flagship-stat">
+    <span class="flagship-stat-num"><span class="count-up" data-target="30">30</span>分 → <span class="count-up" data-target="3">3</span>分</span>
+    <span class="flagship-stat-label">提案書作成にかかる時間</span>
+  </div>
+  <div class="flagship-stat">
+    <span class="flagship-stat-num">最大<span class="count-up" data-target="40">40</span>%削減</span>
+    <span class="flagship-stat-label">業務時間</span>
+  </div>
+  <div class="flagship-stat">
+    <span class="flagship-stat-num">¥<span class="count-up" data-target="3300" data-format="comma">3,300</span></span>
+    <span class="flagship-stat-label">月額（税込）</span>
+  </div>
+</div>
 
 <div class="cta-buttons">
   <a href="/fp-myportal/#trial" class="btn btn-primary btn-large">30日間 無料でためす</a>
@@ -123,6 +142,8 @@ description: "独立FP・FP団体・FP志望者向けのAIツールと業務シ�
 </div>
 
 ---
+
+<p class="section-eyebrow">WHY US</p>
 
 ## なぜマネーマネジメントか
 
@@ -147,14 +168,39 @@ description: "独立FP・FP団体・FP志望者向けのAIツールと業務シ�
 <script>
 (function () {
   var els = document.querySelectorAll('.fade-in');
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function runCountUps(root) {
+    var counters = root.querySelectorAll('.count-up');
+    counters.forEach(function (el) {
+      var target = parseInt(el.getAttribute('data-target'), 10);
+      if (isNaN(target)) { return; }
+      var format = el.getAttribute('data-format');
+      var render = function (value) {
+        el.textContent = format === 'comma' ? value.toLocaleString('ja-JP') : String(value);
+      };
+      if (reduceMotion) { render(target); return; }
+      var duration = 900;
+      var startTime = null;
+      function step(ts) {
+        if (startTime === null) { startTime = ts; }
+        var progress = Math.min((ts - startTime) / duration, 1);
+        render(Math.round(target * progress));
+        if (progress < 1) { requestAnimationFrame(step); }
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
   if (!els.length || !('IntersectionObserver' in window)) {
-    els.forEach(function (el) { el.classList.add('visible'); });
+    els.forEach(function (el) { el.classList.add('visible'); runCountUps(el); });
     return;
   }
   var obs = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
       if (e.isIntersecting) {
         e.target.classList.add('visible');
+        runCountUps(e.target);
         obs.unobserve(e.target);
       }
     });
