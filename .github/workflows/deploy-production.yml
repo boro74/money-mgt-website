@@ -63,22 +63,23 @@ jobs:
         run: hugo --minify
 
       - name: FTP デプロイ → LOLIPOP hugo/
-        # セキュリティ注記（QA P1 対応・2026-07-04、2026-07-25記述修正）:
-        #   protocol: ftp（平文）を使用しているため、FTP_USERNAME・FTP_PASSWORD・転送内容が
-        #   非暗号化で送信される。LOLIPOP が FTPS に対応していないため緊急対応として許容
-        #   （PR #14 / QA P1）。GitHub Actions のホスト型ランナーは送信元IPが固定・限定されず、
-        #   IPアドレスの性質は盗聴リスクの軽減根拠にならない（2026-07-25 QA P2指摘を受け誤記を修正）。
-        #   転送対象がHugo静的ファイル（公開済みコンテンツのみ）であることが唯一の限定要因であり、
-        #   認証情報（FTP_USERNAME・FTP_PASSWORD）自体は経路上で平文露出するリスクが残る。
-        #   中長期的には SFTP または LOLIPOP の FTPS 対応を確認し protocol: sftp または ftps へ
-        #   移行すること（TODO: LOLIPOP サポートへ SFTP 可否を確認。トラッキング: Issue #16）。
+        # セキュリティ注記（QA P1再指摘 2026-08-02 対応・2026-08-03修正）:
+        #   PR #14 は「LOLIPOP が FTPS 非対応」という未検証の前提で protocol: ftps→ftp
+        #   （平文化）への切り戻しを提案していたが、実際には protocol: ftps のまま
+        #   本番稼働してきた実行履歴（run 28683278081 2026-07-03 / 30174943916 2026-07-25 /
+        #   30689153103・30703312589 2026-08-01、いずれも success・ファイルアップロード成功を
+        #   ログで確認済み）があり、LOLIPOP は本アカウントで FTPS に対応していることが実証済み。
+        #   よって ftp への切り戻しは不要かつ平文化による退行のため行わず、ftps を維持する。
+        #   さらなる強化として SFTP（SSH鍵認証）はロリポップのスタンダードプラン以上でのみ
+        #   利用可能（ライト/エコノミープランはSSH機能自体が非提供）と判明。本アカウントの
+        #   契約プランを代表に確認できていないため、SFTP移行の要否は Issue #16 で追跡継続する。
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
-          protocol: ftp
+          protocol: ftps
           local-dir: ./public/
           server-dir: ${{ secrets.FTP_SERVER_DIR }}
           exclude: |
