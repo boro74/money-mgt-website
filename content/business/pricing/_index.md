@@ -2,6 +2,8 @@
 title: "FP個人コンサル料金 | マネーマネジメント"
 description: "代表FPによる個人向けファイナンシャル相談の料金をご案内します。単発相談・ライフプラン作成・継続顧問、すべて税込表示。"
 url: "/business/pricing/"
+_build:
+  list: false
 ---
 
 ## FP個人コンサルの料金について
