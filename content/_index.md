@@ -161,7 +161,10 @@ description: "独立FP・FP団体・FP志望者向けのAIツールと業務シ�
 
 個人のお金の相談も受け付けています。ライフプラン・家計見直し・資産運用など、お気軽にどうぞ。
 
-<a href="/contact/" class="btn btn-secondary">代表へ相談する →</a>
+<div class="cta-buttons">
+  <a href="/contact/" class="btn btn-secondary">代表へ相談する →</a>
+  <a href="/business/pricing/" class="btn btn-secondary">料金を見る →</a>
+</div>
 
 </div>
 
